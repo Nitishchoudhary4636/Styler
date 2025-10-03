@@ -9,9 +9,8 @@ const API_CONFIG = {
             return 'http://localhost:8080';
         }
         
-        // Production - you'll update this with your actual backend URL
-        // Example: 'https://styler-backend-production.up.railway.app'
-        return window.BACKEND_URL || 'https://your-backend-url-here.up.railway.app';
+        // Production - connected to Railway backend
+        return window.BACKEND_URL || 'https://web-production-9bb1a.up.railway.app';
     })(),
     ENDPOINTS: {
         USERS: '/api/users',
