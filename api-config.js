@@ -190,11 +190,17 @@ class ApiService {
 
 // Initialize API connection check
 document.addEventListener('DOMContentLoaded', async () => {
+    // Debug logging
+    console.log('🔧 API Configuration Debug:');
+    console.log('Current hostname:', window.location.hostname);
+    console.log('Backend URL:', API_CONFIG.BASE_URL);
+    console.log('Registration endpoint:', `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.REGISTER}`);
+    
     const isBackendConnected = await ApiService.testConnection();
     if (!isBackendConnected) {
-        console.warn('Backend not connected. Running in offline mode.');
+        console.warn('❌ Backend not connected. Running in offline mode.');
         // You can show a notification to users here
     } else {
-        console.log('Backend connected successfully!');
+        console.log('✅ Backend connected successfully!');
     }
 });
