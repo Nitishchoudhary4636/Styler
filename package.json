@@ -4,9 +4,8 @@
   "description": "Styler - Premium Bags & Shoes E-commerce Platform",
   "main": "index.html",
   "scripts": {
-    "start": "node -v",
-    "build": "echo 'Build complete'",
-    "dev": "echo 'Development server'"
+    "build": "echo 'No build needed for static site'",
+    "start": "echo 'Static website ready'"
   },
   "keywords": [
     "ecommerce",
@@ -17,14 +16,9 @@
   ],
   "author": "Styler Team",
   "license": "MIT",
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "dependencies": {},
-  "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/styler-ecommerce.git"
+    "url": "https://github.com/Nitishchoudhary4636/styler.git"
   },
-  "homepage": "https://styler-ecommerce.vercel.app"
+  "homepage": "https://styler.vercel.app"
 }
