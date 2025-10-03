@@ -1,0 +1,30 @@
+{
+  "name": "styler-ecommerce",
+  "version": "1.0.0",
+  "description": "Styler - Premium Bags & Shoes E-commerce Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "node -v",
+    "build": "echo 'Build complete'",
+    "dev": "echo 'Development server'"
+  },
+  "keywords": [
+    "ecommerce",
+    "fashion",
+    "bags",
+    "shoes",
+    "styler"
+  ],
+  "author": "Styler Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/styler-ecommerce.git"
+  },
+  "homepage": "https://styler-ecommerce.vercel.app"
+}

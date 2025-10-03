@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Signup - Styler</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23e74c3c' d='M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.7 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-6.2 6.9-17.1 6.9-23.3 0l-232-256c-7.6-8.5-8.3-21.2-1.5-30.4l112-152zm154.3 8.2c-6.2 0-11.3 5.1-11.3 11.3v60.5c0 6.2 5.1 11.3 11.3 11.3s11.3-5.1 11.3-11.3V53.3c0-6.2-5.1-11.3-11.3-11.3z'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="api-config.js"></script>
+</head>
+<body>
+ 
+  <div id="header-placeholder"></div>
+
+  
+  <section class="auth-section">
+    <div class="container">
+      <div class="auth-container">
+        <div class="auth-form">
+          <h1 id="authTitle">Login</h1>
+          
+          <div id="authMessage" class="auth-message" style="display: none;"></div>
+          
+          <form id="authForm">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" required>
+            </div>
+            
+            <div class="form-group" id="nameGroup" style="display: none;">
+              <label for="name">Full Name</label>
+              <input type="text" id="name">
+            </div>
+            
+            <div class="form-group" id="phoneGroup" style="display: none;">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone">
+            </div>
+            
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" required>
+              <div class="forgot-password-link" id="forgotPasswordLink" style="text-align: right; margin-top: 8px;">
+                <a href="forgot-password.html" style="color: #007bff; text-decoration: none; font-size: 14px;">
+                  <i class="fas fa-key"></i> Forgot Password?
+                </a>
+              </div>
+            </div>
+            
+            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full" id="authSubmitBtn">Login</button>
+          </form>
+          
+          <div class="auth-toggle">
+            <p id="authToggleText">
+              Don't have an account? 
+              <a href="#" onclick="toggleAuthMode(event)">Sign up here</a>
+            </p>
+          </div>
+        </div>
+        
+        <div class="auth-benefits">
+          <h3>Why Create an Account?</h3>
+          <ul>
+            <li><i class="fas fa-check"></i> Save your shipping addresses</li>
+            <li><i class="fas fa-check"></i> View your order history</li>
+            <li><i class="fas fa-check"></i> Get exclusive offers</li>
+            <li><i class="fas fa-check"></i> Faster checkout process</li>
+            <li><i class="fas fa-check"></i> Order history at your fingertips</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+
+  <script src="sript.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+  <script>
+    let isSignupMode = false;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('mode') === 'signup') {
+        toggleAuthMode();
+      }
+      
+    
+      document.getElementById('authForm').addEventListener('submit', handleAuth);
+    });
+
+    function toggleAuthMode(event) {
+      if (event) event.preventDefault();
+      
+      isSignupMode = !isSignupMode;
+      
+      const title = document.getElementById('authTitle');
+      const confirmGroup = document.getElementById('confirmPasswordGroup');
+      const nameGroup = document.getElementById('nameGroup');
+      const phoneGroup = document.getElementById('phoneGroup');
+      const submitBtn = document.getElementById('authSubmitBtn');
+      const toggleText = document.getElementById('authToggleText');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      
+      if (isSignupMode) {
+        title.textContent = 'Sign Up';
+        confirmGroup.style.display = 'block';
+        nameGroup.style.display = 'block';
+        phoneGroup.style.display = 'block';
+        forgotPasswordLink.style.display = 'none'; // Hide forgot password in signup mode
+        submitBtn.textContent = 'Create Account';
+        toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login here</a>';
+        document.getElementById('name').required = true;
+        document.getElementById('phone').required = true;
+      } else {
+        title.textContent = 'Login';
+        confirmGroup.style.display = 'none';
+        nameGroup.style.display = 'none';
+        phoneGroup.style.display = 'none';
+        forgotPasswordLink.style.display = 'block'; // Show forgot password in login mode
+        submitBtn.textContent = 'Login';
+        toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up here</a>';
+        document.getElementById('name').required = false;
+        document.getElementById('phone').required = false;
+      }
+      
+      document.getElementById('authForm').reset();
+      hideAuthMessage();
+    }
+
+    async function handleAuth(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const submitBtn = document.getElementById('authSubmitBtn');
+      
+      // Disable submit button during request
+      submitBtn.disabled = true;
+      submitBtn.textContent = isSignupMode ? 'Creating Account...' : 'Logging in...';
+      
+      try {
+        if (isSignupMode) {
+          // Validation
+          if (password !== confirmPassword) {
+            showAuthMessage('Passwords do not match', 'error');
+            return;
+          }
+          
+          if (password.length < 6) {
+            showAuthMessage('Password must be at least 6 characters', 'error');
+            return;
+          }
+          
+          const name = document.getElementById('name').value;
+          const phone = document.getElementById('phone').value;
+          
+          if (!name.trim() || !phone.trim()) {
+            showAuthMessage('Please fill in all required fields', 'error');
+            return;
+          }
+          
+          // Call backend API for registration
+          const userData = { name: name.trim(), email, password, phone: phone.trim() };
+          const user = await ApiService.registerUser(userData);
+          
+          showAuthMessage('Account created successfully! Please login.', 'success');
+          
+          setTimeout(() => {
+            toggleAuthMode();
+          }, 1500);
+          
+        } else {
+          // Call backend API for login
+          const user = await ApiService.loginUser(email, password);
+          
+          // Store user data in localStorage
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('userEmail', email);
+          
+          showAuthMessage('Login successful! Redirecting...', 'success');
+          
+          setTimeout(() => {
+            const returnUrl = sessionStorage.getItem('returnUrl') || 'index.html';
+            sessionStorage.removeItem('returnUrl');
+            window.location.href = returnUrl;
+          }, 1500);
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+        showAuthMessage(error.message || 'An error occurred. Please try again.', 'error');
+      } finally {
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = isSignupMode ? 'Create Account' : 'Login';
+      }
+    }
+
+    function showAuthMessage(message, type) {
+      const messageDiv = document.getElementById('authMessage');
+      messageDiv.textContent = message;
+      messageDiv.className = `auth-message ${type}`;
+      messageDiv.style.display = 'block';
+    }
+
+    function hideAuthMessage() {
+      const messageDiv = document.getElementById('authMessage');
+      messageDiv.style.display = 'none';
+    }
+
+    function showForgotPassword() {
+      alert('Forgot password functionality would be implemented with backend integration.');
+    }
+  </script>
+</body>
+</html>

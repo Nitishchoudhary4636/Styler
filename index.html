@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Styler - Premium Bags & Shoes</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23e74c3c' d='M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.7 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-6.2 6.9-17.1 6.9-23.3 0l-232-256c-7.6-8.5-8.3-21.2-1.5-30.4l112-152zm154.3 8.2c-6.2 0-11.3 5.1-11.3 11.3v60.5c0 6.2 5.1 11.3 11.3 11.3s11.3-5.1 11.3-11.3V53.3c0-6.2-5.1-11.3-11.3-11.3z'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script src="api-config.js"></script>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+ 
+  <section class="hero">
+    <img class="home-img" src="Bagful_D_1.webp" alt="Bag Collection" 
+        
+  </section>
+
+ 
+  <div class="section-spacing section-spacing--padded" 
+       style="--background: 11 72 93; background-color: rgb(var(--background)); 
+              --text-color: 255 255 255; color: rgb(var(--text-color)); 
+              --border-color: 48 99 117;">
+    <div class="scrolling-content">
+      <div class="scrolling-content__track">
+        <p class="scrolling-content__text">BUY 2 GET 10% OFF on 2nd</p>
+        <p class="scrolling-content__text">/</p>
+        <p class="scrolling-content__text">BUY 3 GET 20% OFF on 3rd</p>
+        <p class="scrolling-content__text">/</p>
+        <p class="scrolling-content__text">BUY 4 AND PAY FOR 3</p>
+        <p class="scrolling-content__text">/</p>
+        <p class="scrolling-content__text">BUY 2 GET 10% OFF on 2nd</p>
+        <p class="scrolling-content__text">/</p>
+        <p class="scrolling-content__text">BUY 3 GET 20% OFF on 3rd</p>
+        <p class="scrolling-content__text">/</p>
+        <p class="scrolling-content__text">BUY 4 AND PAY FOR 3</p>
+      </div>
+    </div>
+  </div>
+
+  
+  <section class="featured-products">
+    <div class="container">
+      <h2 class="section-title">Featured Products</h2>
+      <div id="featuredProducts" class="products-grid">
+      
+      </div>
+      <div id="hiddenProducts" class="products-hidden">
+       
+      </div>
+      <div class="view-more-container">
+        <button id="viewMoreBtn" class="view-more-btn" onclick="showMoreProducts()" style="display: none;">
+          <i class="fas fa-plus"></i>
+          View More Products
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="newsletter">
+    <div class="container">
+      <div class="newsletter-content">
+        <h3>Stay Updated</h3>
+        <p>Get the latest updates on new arrivals and exclusive offers</p>
+        <form id="newsletterForm" class="newsletter-form">
+          <input type="email" placeholder="Enter your email" required>
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+ 
+  <script src="sript.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+  <script src="cart-manager.js"></script>
+  <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFeaturedProducts();
+      setupNewsletterForm();
+    });
+
+    function setupNewsletterForm() {
+      const form = document.getElementById('newsletterForm');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const email = form.querySelector('input[type="email"]').value;
+         
+          const subscribers = JSON.parse(localStorage.getItem('newsletter') || '[]');
+          if (!subscribers.includes(email)) {
+            subscribers.push(email);
+            localStorage.setItem('newsletter', JSON.stringify(subscribers));
+            showNotification('Successfully subscribed to newsletter!', 'success');
+            form.reset();
+          } else {
+            showNotification('Email already subscribed!', 'info');
+          }
+        });
+      }
+    }
+  </script>
+</body>
+</html>
