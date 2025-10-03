@@ -1,9 +1,18 @@
 // Frontend-Backend Configuration
 const API_CONFIG = {
-    // Automatically detect environment - localhost for development, your backend URL for production
-    BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:8080' 
-        : '', // Empty string means use localStorage-only mode in production
+    // Automatically detect environment and set backend URL
+    BASE_URL: (() => {
+        const hostname = window.location.hostname;
+        
+        // Local development
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return 'http://localhost:8080';
+        }
+        
+        // Production - you'll update this with your actual backend URL
+        // Example: 'https://styler-backend-production.up.railway.app'
+        return window.BACKEND_URL || 'https://your-backend-url-here.up.railway.app';
+    })(),
     ENDPOINTS: {
         USERS: '/api/users',
         ORDERS: '/api/orders',
@@ -17,8 +26,10 @@ const API_CONFIG = {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    // Enable offline mode for production deployment
-    USE_OFFLINE_MODE: window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+    // Production mode detection
+    IS_PRODUCTION: window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1',
+    // Fallback to localStorage if backend is unavailable
+    USE_OFFLINE_FALLBACK: true
 };
 
 // API Helper Functions
