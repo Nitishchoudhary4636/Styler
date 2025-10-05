@@ -585,19 +585,34 @@ async function loadOrdersPage() {
         
         // Convert backend orders to frontend format if needed
         const formattedOrders = ordersArray.map(order => ({
-          id: order.id || 'ORD-' + order.orderId,
+          id: order.id || order.orderId || 'ORD-' + Date.now(),
           userId: currentUserData.email,
-          items: order.items || [],
+          items: order.items || [
+            {
+              productName: 'Order Item',
+              price: order.totalAmount || 0,
+              quantity: order.itemCount || 1,
+              color: 'N/A',
+              size: 'N/A'
+            }
+          ],
           subtotal: order.totalAmount || 0,
           shipping: 0,
           tax: 0,
           total: order.totalAmount || 0,
-          shippingAddress: order.shippingAddress || {},
-          status: order.status || 'Pending',
-          orderDate: order.createdAt || order.orderDate || new Date().toISOString(),
-          estimatedDelivery: getEstimatedDelivery(),
+          shippingAddress: order.shippingAddress || {
+            fullName: currentUserData.name || 'Customer',
+            phone: currentUserData.phone || 'Not provided',
+            address: 'Address not available',
+            city: 'City not provided',
+            state: 'State not provided',
+            zipCode: 'ZIP not provided'
+          },
+          status: order.status || 'CONFIRMED',
+          orderDate: order.orderDate || new Date().toISOString(),
+          estimatedDelivery: order.estimatedDelivery || getEstimatedDelivery(),
           paymentMethod: order.paymentMethod || 'Cash on Delivery',
-          trackingNumber: order.trackingNumber || 'TRK-' + Date.now()
+          trackingNumber: order.trackingNumber || 'TRK-' + (order.orderId || Date.now())
         }));
         
         allOrders = formattedOrders;
