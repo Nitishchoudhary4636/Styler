@@ -408,6 +408,7 @@ p {
 @media (max-width: 480px) {
   .hero {
     margin: 0 -15px; /* Compensate for container padding */
+    width: calc(100% + 30px);
   }
   
   .home-img {
@@ -415,6 +416,24 @@ p {
     width: 100%;
     object-fit: cover;
     object-position: center;
+    max-width: none;
+  }
+}
+
+/* Force mobile responsive fix */
+@media screen and (max-width: 768px) {
+  .container .hero {
+    margin-left: -20px;
+    margin-right: -20px;
+    width: calc(100% + 40px);
+  }
+  
+  .container .home-img {
+    width: 100%;
+    height: auto;
+    min-height: 180px;
+    max-height: 250px;
+    object-fit: cover;
   }
 }
 
