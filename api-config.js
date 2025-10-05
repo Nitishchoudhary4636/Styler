@@ -9,17 +9,17 @@ const API_CONFIG = {
             return 'http://localhost:8080';
         }
         
-        // Production - connected to Railway backend
-        return window.BACKEND_URL || 'https://web-production-9bb1a.up.railway.app';
+        // Production - connected to Render backend
+        return window.BACKEND_URL || 'https://styler-backend.onrender.com';
     })(),
     ENDPOINTS: {
-        USERS: '/api/users',
-        ORDERS: '/api/orders',
-        LOGIN: '/api/users/login',
-        REGISTER: '/api/users/register',
-        FORGOT_PASSWORD: '/api/users/forgot-password',
-        RESET_PASSWORD: '/api/users/reset-password',
-        USER_ORDERS: '/api/orders/user'
+        USERS: '/users',
+        ORDERS: '/orders',
+        LOGIN: '/users/login',
+        REGISTER: '/users/register',
+        FORGOT_PASSWORD: '/users/forgot-password',
+        RESET_PASSWORD: '/users/reset-password',
+        USER_ORDERS: '/orders/user'
     },
     HEADERS: {
         'Content-Type': 'application/json',
