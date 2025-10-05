@@ -1,4 +1,4 @@
-// Frontend-Backend Configuration
+// Frontend-Backend Configuration for Render Deployment
 const API_CONFIG = {
     // Automatically detect environment and set backend URL
     BASE_URL: (() => {
@@ -9,7 +9,7 @@ const API_CONFIG = {
             return 'http://localhost:8080';
         }
         
-        // Production - connected to Render backend
+        // Production - Render backend with PostgreSQL
         return window.BACKEND_URL || 'https://styler-backend.onrender.com';
     })(),
     ENDPOINTS: {
