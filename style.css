@@ -28,6 +28,18 @@ body {
   background-color: #f8f9fa;
 }
 
+/* Responsive images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive videos and iframes */
+video, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -370,6 +382,40 @@ p {
   object-fit: cover;
   display: block;
   max-width: 100%;
+}
+
+/* Mobile responsive hero images */
+@media (max-width: 768px) {
+  .hero {
+    margin: 0 -20px; /* Compensate for container padding */
+  }
+  
+  .home-img {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  
+  /* Fix background images on mobile */
+  .hero-with-bg {
+    padding: 2rem 0;
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    margin: 0 -15px; /* Compensate for container padding */
+  }
+  
+  .home-img {
+    height: 150px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .hero-with-bg {
@@ -2157,6 +2203,10 @@ p {
     margin: 1rem 0;
   }
 
+  .hero {
+    margin-bottom: 0;
+  }
+
   .hero-content h1 {
     font-size: 2.2rem;
   }
@@ -2327,6 +2377,10 @@ p {
 }
 
 @media (max-width: 480px) {
+  .hero {
+    margin-bottom: 0;
+  }
+
   .hero-content h1 {
     font-size: 1.8rem;
   }
