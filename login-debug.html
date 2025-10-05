@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login State Debug</title>
+</head>
+<body>
+    <h1>Login State Debug</h1>
+    <button onclick="checkLoginState()">Check Login State</button>
+    <button onclick="clearStorage()">Clear Storage</button>
+    <button onclick="setTestUser()">Set Test User</button>
+    <div id="debug-results"></div>
+    
+    <script src="cart-manager.js"></script>
+    <script>
+        function checkLoginState() {
+            const currentUser = localStorage.getItem('currentUser');
+            const userEmail = localStorage.getItem('userEmail');
+            const loginResult = isLoggedIn();
+            
+            document.getElementById('debug-results').innerHTML = `
+                <h2>Current Login State:</h2>
+                <p><strong>currentUser:</strong> ${currentUser}</p>
+                <p><strong>userEmail:</strong> ${userEmail}</p>
+                <p><strong>isLoggedIn():</strong> ${loginResult}</p>
+                <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+            `;
+        }
+        
+        function clearStorage() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('userEmail');
+            alert('Storage cleared!');
+            checkLoginState();
+        }
+        
+        function setTestUser() {
+            const testUser = {
+                email: 'test@example.com',
+                fullName: 'Test User',
+                userId: 1
+            };
+            localStorage.setItem('currentUser', JSON.stringify(testUser));
+            localStorage.setItem('userEmail', 'test@example.com');
+            alert('Test user set!');
+            checkLoginState();
+        }
+        
+        // Auto-check on load
+        checkLoginState();
+    </script>
+</body>
+</html>

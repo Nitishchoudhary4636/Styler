@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backend URL Test</title>
+</head>
+<body>
+    <h1>Backend URL Check</h1>
+    <div id="result"></div>
+    
+    <script src="api-config.js"></script>
+    <script>
+        document.getElementById('result').innerHTML = `
+            <h2>Current Configuration:</h2>
+            <p><strong>Hostname:</strong> ${window.location.hostname}</p>
+            <p><strong>Backend URL:</strong> ${API_CONFIG.BASE_URL}</p>
+            <p><strong>Registration Endpoint:</strong> ${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.REGISTER}</p>
+            <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+        `;
+    </script>
+</body>
+</html>
