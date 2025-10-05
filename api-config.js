@@ -1,4 +1,4 @@
-// FORCE RENDER BACKEND - NO MORE RAILWAY!
+// Render Backend Configuration - Clean and Simple
 window.FORCE_RENDER_BACKEND = true;
 
 // Frontend-Backend Configuration for Render Deployment
