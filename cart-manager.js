@@ -570,14 +570,21 @@ async function loadOrdersPage() {
   
   try {
     const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    console.log('🔍 Loading orders for user:', currentUserData);
     
     // Try to fetch orders from backend first
     if (currentUserData.id) {
       try {
+        console.log('📡 Fetching orders from backend for user ID:', currentUserData.id);
         const backendOrders = await ApiService.getUserOrders(currentUserData.id);
+        console.log('✅ Backend orders received:', backendOrders);
+        
+        // Check if backendOrders is an array
+        const ordersArray = Array.isArray(backendOrders) ? backendOrders : [];
+        console.log('📊 Processing', ordersArray.length, 'orders');
         
         // Convert backend orders to frontend format if needed
-        const formattedOrders = backendOrders.map(order => ({
+        const formattedOrders = ordersArray.map(order => ({
           id: order.id || 'ORD-' + order.orderId,
           userId: currentUserData.email,
           items: order.items || [],
@@ -594,15 +601,18 @@ async function loadOrdersPage() {
         }));
         
         allOrders = formattedOrders;
+        console.log('✅ Orders loaded successfully:', allOrders.length, 'orders');
         
         // Also update localStorage with backend data
         localStorage.setItem('orders', JSON.stringify(formattedOrders));
       } catch (backendError) {
-        console.log('Backend fetch failed, using localStorage:', backendError);
+        console.error('❌ Backend fetch failed:', backendError);
+        console.log('🔄 Falling back to localStorage');
         // Fallback to localStorage
         allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
       }
     } else {
+      console.log('⚠️ No user ID found, using localStorage');
       // Fallback to localStorage
       allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
     }
