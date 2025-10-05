@@ -621,26 +621,41 @@ async function loadOrdersPage() {
     allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
   }
   
-  const currentUser = localStorage.getItem('currentUser');
-  const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-  allOrders = orders.filter(order => order.userId === currentUser);
-  filteredOrders = [...allOrders];
+  // Filter orders for current user (allOrders should already be set from backend or localStorage)
+  const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  console.log('🔍 Filtering orders for user:', currentUserData.email);
+  console.log('📊 Total orders before filtering:', allOrders.length);
+  
+  // Filter by user email or ID
+  filteredOrders = allOrders.filter(order => 
+    order.userId === currentUserData.email || 
+    order.userId === currentUserData.id ||
+    order.userEmail === currentUserData.email
+  );
+  
+  console.log('✅ Filtered orders for current user:', filteredOrders.length);
   
   renderOrders();
 }
 
 function renderOrders() {
+  console.log('🎨 Rendering orders, count:', filteredOrders.length);
   const ordersContainer = document.getElementById('ordersList');
   const noOrdersDiv = document.getElementById('noOrders');
   
-  if (!ordersContainer) return;
+  if (!ordersContainer) {
+    console.error('❌ Orders container not found!');
+    return;
+  }
   
   if (filteredOrders.length === 0) {
+    console.log('📭 No orders to display');
     ordersContainer.innerHTML = '';
     if (noOrdersDiv) noOrdersDiv.style.display = 'block';
     return;
   }
   
+  console.log('✅ Displaying', filteredOrders.length, 'orders');
   if (noOrdersDiv) noOrdersDiv.style.display = 'none';
   
   ordersContainer.innerHTML = filteredOrders
