@@ -1,7 +1,15 @@
+// FORCE RENDER BACKEND - NO MORE RAILWAY!
+window.FORCE_RENDER_BACKEND = true;
+
 // Frontend-Backend Configuration for Render Deployment
 const API_CONFIG = {
     // Automatically detect environment and set backend URL
     BASE_URL: (() => {
+        // OVERRIDE: Always use Render in production
+        if (window.FORCE_RENDER_BACKEND && window.location.hostname !== 'localhost') {
+            return 'https://styler-backend.onrender.com';
+        }
+        
         const hostname = window.location.hostname;
         
         // Local development
