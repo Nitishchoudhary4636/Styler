@@ -116,7 +116,7 @@
         confirmGroup.style.display = 'block';
         nameGroup.style.display = 'block';
         phoneGroup.style.display = 'block';
-        forgotPasswordLink.style.display = 'none'; // Hide forgot password in signup mode
+        forgotPasswordLink.style.display = 'none';
         submitBtn.textContent = 'Create Account';
         toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleAuthMode(event)">Login here</a>';
         document.getElementById('name').required = true;
@@ -126,7 +126,7 @@
         confirmGroup.style.display = 'none';
         nameGroup.style.display = 'none';
         phoneGroup.style.display = 'none';
-        forgotPasswordLink.style.display = 'block'; // Show forgot password in login mode
+        forgotPasswordLink.style.display = 'block'; 
         submitBtn.textContent = 'Login';
         toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up here</a>';
         document.getElementById('name').required = false;
@@ -145,13 +145,13 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
       const submitBtn = document.getElementById('authSubmitBtn');
       
-      // Disable submit button during request
+    
       submitBtn.disabled = true;
       submitBtn.textContent = isSignupMode ? 'Creating Account...' : 'Logging in...';
       
       try {
         if (isSignupMode) {
-          // Validation
+          
           if (password !== confirmPassword) {
             showAuthMessage('Passwords do not match', 'error');
             return;
@@ -170,7 +170,7 @@
             return;
           }
           
-          // Call backend API for registration
+          
           const userData = { name: name.trim(), email, password, phone: phone.trim() };
           const user = await ApiService.registerUser(userData);
           
@@ -181,10 +181,10 @@
           }, 1500);
           
         } else {
-          // Call backend API for login
+    
           const user = await ApiService.loginUser(email, password);
           
-          // Store user data in localStorage
+      
           localStorage.setItem('currentUser', JSON.stringify(user));
           localStorage.setItem('userEmail', email);
           
@@ -200,7 +200,7 @@
         console.error('Auth error:', error);
         showAuthMessage(error.message || 'An error occurred. Please try again.', 'error');
       } finally {
-        // Re-enable submit button
+        
         submitBtn.disabled = false;
         submitBtn.textContent = isSignupMode ? 'Create Account' : 'Login';
       }

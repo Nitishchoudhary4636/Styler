@@ -28,13 +28,13 @@ body {
   background-color: #f8f9fa;
 }
 
-/* Responsive images */
+
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* Responsive videos and iframes */
+
 video, iframe, embed, object {
   max-width: 100%;
   height: auto;
@@ -384,10 +384,10 @@ p {
   max-width: 100%;
 }
 
-/* Mobile responsive hero images */
+
 @media (max-width: 768px) {
   .hero {
-    margin: 0 -20px; /* Compensate for container padding */
+    margin: 0 -20px; 
   }
   
   .home-img {
@@ -398,7 +398,7 @@ p {
     display: block;
   }
   
-  /* Fix background images on mobile */
+
   .hero-with-bg {
     padding: 2rem 0;
     background-attachment: scroll;
@@ -407,7 +407,7 @@ p {
 
 @media (max-width: 480px) {
   .hero {
-    margin: 0 -15px; /* Compensate for container padding */
+    margin: 0 -15px;
     width: calc(100% + 30px);
   }
   
@@ -420,7 +420,7 @@ p {
   }
 }
 
-/* Force mobile responsive fix */
+
 @media screen and (max-width: 768px) {
   .container .hero {
     margin-left: -20px;
@@ -3142,5 +3142,4 @@ p {
     padding: 0.8rem 1.5rem;
     font-size: 0.9rem;
   }
-}/ *   F o r c e   d e p l o y m e n t   -   1 0 / 0 5 / 2 0 2 5   2 0 : 1 2 : 5 4   * /  
- 
+}
