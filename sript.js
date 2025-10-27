@@ -656,9 +656,9 @@ function clearGlobalSearch() {
 function applySearchFilter(searchTerm) {
   sessionStorage.setItem('searchTerm', searchTerm);
   
-  if (window.location.pathname.includes('Products/products.html')) {
+  if (window.location.pathname.includes('products.html')) {
     loadBagsPage();
-  } else if (window.location.pathname.includes('Products/shoes.html')) {
+  } else if (window.location.pathname.includes('shoes.html')) {
     loadShoesPage();
   } else if (window.location.pathname.includes('index.html')) {
     displayGlobalSearchResults(searchTerm);
@@ -685,7 +685,7 @@ function loadProductDetail() {
   const productBreadcrumb = document.getElementById('productBreadcrumb');
   if (categoryBreadcrumb) {
     categoryBreadcrumb.textContent = product.category === 'bags' ? 'Bags' : 'Shoes';
-    categoryBreadcrumb.innerHTML = `<a href="${product.category === 'bags' ? 'Products/products.html' : 'Products/shoes.html'}">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
+    categoryBreadcrumb.innerHTML = `<a href="${product.category === 'bags' ? 'products.html' : 'shoes.html'}">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
   }
   if (productBreadcrumb) {
     productBreadcrumb.textContent = product.name;
