@@ -102,7 +102,7 @@ const products = [
     name: "Men's Casual Sneakers",
     price: 1899,
     category: "shoes",
-    image: "Shoes/pexels-obviouslyarthur-1102776.jpg",
+  image: "../Shoes/pexels-obviouslyarthur-1102776.jpg",
     description: "Comfortable men's sneakers perfect for daily wear. Breathable material with excellent cushioning and style."
   },
   {
@@ -110,7 +110,7 @@ const products = [
     name: "Women's Running Shoes",
     price: 2199,
     category: "shoes",
-    image: "Shoes/pexels-jeshoots-com-147458-7432.jpg",
+  image: "../Shoes/pexels-jeshoots-com-147458-7432.jpg",
     description: "High-performance women's running shoes with advanced cushioning technology. Perfect for fitness enthusiasts."
   },
   {
@@ -118,7 +118,7 @@ const products = [
     name: "Formal Leather Shoes",
     price: 1599,
     category: "shoes",
-    image: "Shoes/pexels-goumbik-292999.jpg",
+  image: "../Shoes/pexels-goumbik-292999.jpg",
     description: "Professional formal leather shoes crafted from genuine leather. Perfect for office wear and formal occasions."
   },
   {
@@ -126,7 +126,7 @@ const products = [
     name: "Women's High Heel Pumps",
     price: 2499,
     category: "shoes",
-    image: "Shoes/pexels-godisable-jacob-226636-1308324.jpg",
+  image: "../Shoes/pexels-godisable-jacob-226636-1308324.jpg",
     description: "Classic high heel pumps in genuine leather. Perfect for office wear and formal occasions."
   },
   {
@@ -134,7 +134,7 @@ const products = [
     name: "Men's Leather Loafers",
     price: 2199,
     category: "shoes",
-    image: "Shoes/pexels-pixabay-267320.jpg",
+  image: "../Shoes/pexels-pixabay-267320.jpg",
     description: "Comfortable leather loafers with cushioned insole. Ideal for casual and semi-formal wear."
   },
   {
@@ -142,7 +142,7 @@ const products = [
     name: "Women's Ankle Boots",
     price: 2799,
     category: "shoes",
-    image: "Shoes/pexels-lorena-martinez-1218850-2351858.jpg",
+  image: "../Shoes/pexels-lorena-martinez-1218850-2351858.jpg",
     description: "Stylish ankle boots with side zipper. Perfect for fall and winter fashion."
   },
   {
@@ -150,7 +150,7 @@ const products = [
     name: "Men's Sports Training Shoes",
     price: 2599,
     category: "shoes",
-    image: "Shoes/pexels-jddaniel-2385477.jpg",
+  image: "../Shoes/pexels-jddaniel-2385477.jpg",
     description: "High-performance training shoes with excellent grip and support. Perfect for gym and outdoor activities."
   },
   {
@@ -158,7 +158,7 @@ const products = [
     name: "Women's Ballet Flats",
     price: 1299,
     category: "shoes",
-    image: "Shoes/pexels-mnzoutfits-1598508.jpg",
+  image: "../Shoes/pexels-mnzoutfits-1598508.jpg",
     description: "Comfortable ballet flats in soft leather. Perfect for daily wear and office use."
   },
   {
@@ -166,7 +166,7 @@ const products = [
     name: "Men's Canvas Sneakers",
     price: 1499,
     category: "shoes",
-    image: "Shoes/pexels-chuck-3261069.jpg",
+  image: "../Shoes/pexels-chuck-3261069.jpg",
   
     description: "Classic canvas sneakers with rubber sole. Comfortable and versatile for casual wear."
   },
@@ -175,7 +175,7 @@ const products = [
     name: "Women's Sandals",
     price: 1799,
     category: "shoes",
-    image: "Shoes/pexels-monicore-134064.jpg",
+  image: "../Shoes/pexels-monicore-134064.jpg",
     description: "Elegant sandals with adjustable straps. Perfect for summer and casual outings."
   },
   {
@@ -183,7 +183,7 @@ const products = [
     name: "Men's Oxford Dress Shoes",
     price: 2999,
     category: "shoes",
-    image: "Shoes/pexels-mnzoutfits-1598505.jpg",
+  image: "../Shoes/pexels-mnzoutfits-1598505.jpg",
     description: "Premium Oxford dress shoes in genuine leather. Perfect for weddings and formal events."
   },
   {
@@ -191,7 +191,7 @@ const products = [
     name: "Women's Wedge Heels",
     price: 2299,
     category: "shoes",
-    image: "Shoes/pexels-didsss-2237456.jpg",
+  image: "../Shoes/pexels-didsss-2237456.jpg",
     description: "Comfortable wedge heels with platform sole. Stylish and comfortable for all-day wear."
   }
 ];
