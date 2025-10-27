@@ -19,7 +19,7 @@ function loadHeader() {
         
         <nav class="nav-menu" id="navMenu">
           <a href="index.html" class="nav-link">Home</a>
-          <a href="products.html" class="nav-link">Bags</a>
+          <a href="bags.html" class="nav-link">Bags</a>
           <a href="shoes.html" class="nav-link">Shoes</a>
           <a href="contact.html" class="nav-link">Contact</a>
           
@@ -204,7 +204,7 @@ function highlightActivePage() {
     
     if (href === currentPage || 
         (currentPage === 'index.html' && href === 'index.html') ||
-        (currentPage === 'products.html' && href === 'products.html') ||
+  (currentPage === 'bags.html' && href === 'bags.html') ||
         (currentPage === 'shoes.html' && href === 'shoes.html') ||
         (currentPage === 'cart.html' && href === 'cart.html') ||
         (currentPage === 'contact.html' && href === 'contact.html')) {
