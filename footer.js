@@ -33,7 +33,7 @@ function loadFooter() {
             <h4>Quick Links</h4>
             <ul class="footer-links">
               <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-              <li><a href="bags.html"><i class="fas fa-shopping-bag"></i> Bags</a></li>
+              <li><a href="products.html"><i class="fas fa-shopping-bag"></i> Bags Collection</a></li>
               <li><a href="shoes.html"><i class="fas fa-running"></i> Shoes Collection</a></li>
               <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
               <li><a href="orders.html"><i class="fas fa-box"></i> My Orders</a></li>
