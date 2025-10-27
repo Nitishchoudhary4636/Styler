@@ -4,14 +4,14 @@ let filteredOrders = [];
 
 function getCart() {
   return JSON.parse(localStorage.getItem('cart') || '[]');
-}
+// ...existing code...
 
 function saveCart(cart) {
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
 }
 
-function addToCartWithVariant(productId, color = null, size = null, quantity = 1) {
+function addToCartWithVariant(bagId, color = null, size = null, quantity = 1) {
   if (!isLoggedIn()) {
     sessionStorage.setItem('returnUrl', window.location.href);
     showNotification('Please login to add items to cart', 'warning');
@@ -21,45 +21,45 @@ function addToCartWithVariant(productId, color = null, size = null, quantity = 1
     return false;
   }
 
-  const product = products.find(p => p.id === productId);
-  if (!product) {
-    showNotification('Product not found', 'error');
+  const bag = bags.find(b => b.id === bagId);
+  if (!bag) {
+    showNotification('Bag not found', 'error');
     return false;
   }
 
   if (color === null) {
     const colorSelect = document.getElementById('colorSelect');
-    color = colorSelect ? colorSelect.value : getDefaultColor(product.category);
+  color = colorSelect ? colorSelect.value : getDefaultColor(bag.category);
   }
   
   if (size === null) {
     const sizeSelect = document.getElementById('sizeSelect');
-    size = sizeSelect ? sizeSelect.value : getDefaultSize(product.category);
+  size = sizeSelect ? sizeSelect.value : getDefaultSize(bag.category);
   }
 
   let cart = getCart();
 
   const existingItemIndex = cart.findIndex(
-    item => item.id == productId && item.color === color && item.size === size
+    item => item.id == bagId && item.color === color && item.size === size
   );
 
   if (existingItemIndex > -1) {
     const oldQuantity = cart[existingItemIndex].quantity;
     cart[existingItemIndex].quantity += quantity;
     const newQuantity = cart[existingItemIndex].quantity;
-    showNotification(`${product.name} quantity updated (${oldQuantity} → ${newQuantity})`, 'success');
+  showNotification(`${bag.name} quantity updated (${oldQuantity} → ${newQuantity})`, 'success');
   } else {
     cart.push({
-      id: productId,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      id: bagId,
+      name: bag.name,
+      price: bag.price,
+      image: bag.image,
       color: color,
       size: size,
       quantity: quantity,
-      category: product.category
+      category: bag.category
     });
-    showNotification(`${product.name} added to cart`, 'success');
+    showNotification(`${bag.name} added to cart`, 'success');
   }
 
   saveCart(cart);
@@ -79,10 +79,10 @@ function getDefaultSize(category) {
   return category === 'shoes' ? '9' : 'Medium';
 }
 
-function updateCartQuantity(productId, color, size, delta) {
+function updateCartQuantity(bagId, color, size, delta) {
   let cart = getCart();
   const itemIndex = cart.findIndex(i => 
-    i.id == productId && i.color === color && i.size === size
+    i.id == bagId && i.color === color && i.size === size
   );
   
   if (itemIndex === -1) return;
@@ -102,28 +102,6 @@ function updateCartQuantity(productId, color, size, delta) {
     loadCartPage();
   }
 }
-
-function removeCartItem(productId, color, size) {
-  if (!confirm('Remove this item from cart?')) return;
-  
-  let cart = getCart();
-  const initialLength = cart.length;
-  
-  cart = cart.filter(i => !(
-    i.id == productId && i.color === color && i.size === size
-  ));
-  
-  if (cart.length < initialLength) {
-    saveCart(cart);
-    showNotification('Item removed from cart', 'info');
-  } else {
-    console.warn('Item not found for removal:', {productId, color, size});
-    showNotification('Item could not be removed', 'error');
-  }
-  
-  if (window.location.pathname.includes('cart.html')) {
-    loadCartPage();
-  }
 }
 
 function cleanupCart() {

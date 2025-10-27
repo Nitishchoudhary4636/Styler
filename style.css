@@ -533,26 +533,26 @@ p {
   font-size: 0.9rem;
 }
 
-.products-hidden {
+.bags-hidden {
   display: none;
 }
 
-.products-visible {
+.bags-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.products-grid,
-.products-visible {
+.bags-grid,
+.bags-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
-.products-grid .product-card,
-.products-visible .product-card {
+.bags-grid .bag-card,
+.bags-visible .bag-card {
   width: 100%;
   max-width: none;
   min-height: auto;
@@ -604,7 +604,7 @@ p {
   color: #2c3e50;
 }
 
-.featured-products {
+.featured-bags {
   padding: 4rem 0;
   background: white;
 }
@@ -648,19 +648,19 @@ p {
   border-color: #e74c3c;
 }
 
-.products-section {
+.bags-section {
   padding: 2rem 0 4rem;
   background: #f8f9fa;
 }
 
-.products-grid {
+.bags-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
 }
 
-.product-card {
+.bag-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -669,33 +669,33 @@ p {
   position: relative;
 }
 
-.product-card:hover {
+.bag-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.15);
 }
 
-.product-image {
+.bag-image {
   position: relative;
   overflow: hidden;
   height: 250px;
 }
 
-.product-image img {
+.bag-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-image img {
+.bag-card:hover .bag-image img {
   transform: scale(1.05);
 }
 
-.product-info {
+.bag-info {
   padding: 1.5rem;
 }
 
-.product-name {
+.bag-name {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -703,7 +703,7 @@ p {
   line-height: 1.4;
 }
 
-.product-category {
+.bag-category {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -714,7 +714,7 @@ p {
   width: fit-content;
 }
 
-.product-category i {
+.bag-category i {
   font-size: 0.8rem;
   color: #3498db;
 }
