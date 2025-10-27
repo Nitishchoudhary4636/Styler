@@ -19,8 +19,8 @@ function loadHeader() {
         
         <nav class="nav-menu" id="navMenu">
           <a href="index.html" class="nav-link">Home</a>
-          <a href="products.html" class="nav-link">Bags</a>
-          <a href="shoes.html" class="nav-link">Shoes</a>
+          <a href="Products/products.html" class="nav-link">Bags</a>
+          <a href="Products/shoes.html" class="nav-link">Shoes</a>
           <a href="contact.html" class="nav-link">Contact</a>
           
           <div class="search-container">
@@ -204,8 +204,8 @@ function highlightActivePage() {
     
     if (href === currentPage || 
         (currentPage === 'index.html' && href === 'index.html') ||
-        (currentPage === 'products.html' && href === 'products.html') ||
-        (currentPage === 'shoes.html' && href === 'shoes.html') ||
+  (currentPage === 'products.html' && href === 'Products/products.html') ||
+  (currentPage === 'shoes.html' && href === 'Products/shoes.html') ||
         (currentPage === 'cart.html' && href === 'cart.html') ||
         (currentPage === 'contact.html' && href === 'contact.html')) {
       link.classList.add('active');
