@@ -533,26 +533,26 @@ p {
   font-size: 0.9rem;
 }
 
-.bags-hidden {
+.products-hidden {
   display: none;
 }
 
-.bags-visible {
+.products-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
 }
 
-.bags-grid,
-.bags-visible {
+.products-grid,
+.products-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
 }
 
-.bags-grid .bag-card,
-.bags-visible .bag-card {
+.products-grid .product-card,
+.products-visible .product-card {
   width: 100%;
   max-width: none;
   min-height: auto;
@@ -604,7 +604,7 @@ p {
   color: #2c3e50;
 }
 
-.featured-bags {
+.featured-products {
   padding: 4rem 0;
   background: white;
 }
@@ -648,19 +648,19 @@ p {
   border-color: #e74c3c;
 }
 
-.bags-section {
+.products-section {
   padding: 2rem 0 4rem;
   background: #f8f9fa;
 }
 
-.bags-grid {
+.products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
   margin-bottom: 2rem;
 }
 
-.bag-card {
+.product-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -669,33 +669,33 @@ p {
   position: relative;
 }
 
-.bag-card:hover {
+.product-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.15);
 }
 
-.bag-image {
+.product-image {
   position: relative;
   overflow: hidden;
   height: 250px;
 }
 
-.bag-image img {
+.product-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.bag-card:hover .bag-image img {
+.product-card:hover .product-image img {
   transform: scale(1.05);
 }
 
-.bag-info {
+.product-info {
   padding: 1.5rem;
 }
 
-.bag-name {
+.product-name {
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -703,7 +703,7 @@ p {
   line-height: 1.4;
 }
 
-.bag-category {
+.product-category {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -714,7 +714,7 @@ p {
   width: fit-content;
 }
 
-.bag-category i {
+.product-category i {
   font-size: 0.8rem;
   color: #3498db;
 }
