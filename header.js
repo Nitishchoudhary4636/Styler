@@ -18,10 +18,10 @@ function loadHeader() {
         </div>
         
         <nav class="nav-menu" id="navMenu">
-          <a href="index.html" class="nav-link">Home</a>
-          <a href="products.html" class="nav-link">Bags</a>
-          <a href="shoes.html" class="nav-link">Shoes</a>
-          <a href="contact.html" class="nav-link">Contact</a>
+          <a href="/index.html" class="nav-link">Home</a>
+          <a href="/Products/bags.html" class="nav-link">Bags</a>
+          <a href="/Products/shoes.html" class="nav-link">Shoes</a>
+          <a href="/contact.html" class="nav-link">Contact</a>
           
           <div class="search-container">
             <input type="text" id="globalSearch" placeholder="Search products..." class="search-input">
@@ -49,7 +49,7 @@ function loadHeader() {
                 </a>
               </div>
               <div id="loggedInMenu" style="display: none;">
-                <a href="orders.html">
+                <a href="/orders.html">
                   <i class="fas fa-box"></i> My Orders
                 </a>
                 <a href="#" onclick="logout()">

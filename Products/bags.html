@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoes Collection - Styler</title>
+  <title>Bags Collection - Styler</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23e74c3c' d='M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.7 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-6.2 6.9-17.1 6.9-23.3 0l-232-256c-7.6-8.5-8.3-21.2-1.5-30.4l112-152zm154.3 8.2c-6.2 0-11.3 5.1-11.3 11.3v60.5c0 6.2 5.1 11.3 11.3 11.3s11.3-5.1 11.3-11.3V53.3c0-6.2-5.1-11.3-11.3-11.3z'/%3E%3C/svg%3E" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <script type="text/javascript" src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
 </head>
@@ -14,7 +14,7 @@
 
 
   <section class="hero">
-    <img class="home-img" src="Homepage_25-09-SKECHERS-12378464-SK-GO-RUN-BRUST-KV_R2_CC_W_1920-x-H_603-pixels.jpg" alt="Shoes Collection">
+    <img class="home-img" src="/1799_1.webp" alt="Bag Collection">
   </section>
 
   <div class="section-spacing section-spacing--padded" 
@@ -40,8 +40,8 @@
 
   <section class="page-header">
     <div class="container">
-      <h1>Shoes Collection</h1>
-      <p>Comfort meets style in our premium shoe collection</p>
+      <h1>Bags Collection</h1>
+      <p>Premium quality bags for every occasion</p>
     </div>
   </section>
 
@@ -49,24 +49,21 @@
     <div class="container">
       <div class="filters">
         <div class="filter-group">
-          <label>Size:</label>
-          <select id="sizeFilter" onchange="applySizeFilter()">
-            <option value="">All Sizes</option>
-            <option value="7">Size 7</option>
-            <option value="8">Size 8</option>
-            <option value="9">Size 9</option>
-            <option value="10">Size 10</option>
-            <option value="11">Size 11</option>
-            <option value="12">Size 12</option>
-          </select>
-        </div>
-        <div class="filter-group">
           <label>Sort By:</label>
           <select id="sortFilter" onchange="applySortFilter()">
             <option value="">Default</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
             <option value="name">Name A-Z</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Price Range:</label>
+          <select id="priceFilter" onchange="applyPriceFilter()">
+            <option value="">All Prices</option>
+            <option value="0-1000">Under ₹1,000</option>
+            <option value="1000-2000">₹1,000 - ₹2,000</option>
+            <option value="2000+">Above ₹2,000</option>
           </select>
         </div>
         <button class="btn btn-outline btn-small" onclick="clearAllFilters()">
@@ -78,19 +75,19 @@
 
   <section class="products-section">
     <div class="container">
-      <div id="shoesGrid" class="products-grid">
+      <div id="bagsGrid" class="products-grid">
       </div>
-      <div id="hiddenShoesGrid" class="products-hidden">
+      <div id="hiddenBagsGrid" class="products-hidden">
       </div>
       <div class="view-more-container">
-        <button id="viewMoreShoesBtn" class="view-more-btn" onclick="showMoreShoes()" style="display: none;">
+        <button id="viewMoreBagsBtn" class="view-more-btn" onclick="showMoreBags()" style="display: none;">
           <i class="fas fa-plus"></i>
-          View More Shoes
+          View More Bags
         </button>
       </div>
       <div id="noProducts" class="no-results" style="display: none;">
-        <i class="fas fa-running"></i>
-        <h3>No shoes found</h3>
+        <i class="fas fa-shopping-bag"></i>
+        <h3>No bags found</h3>
         <p>Try adjusting your filters</p>
       </div>
     </div>
@@ -99,27 +96,27 @@
   <div id="footer-placeholder"></div>
 
 
-  <script src="sript.js"></script>
-  <script src="header.js"></script>
-  <script src="footer.js"></script>
-  <script src="cart-manager.js"></script>
+  <script src="/sript.js"></script>
+  <script src="/header.js"></script>
+  <script src="/footer.js"></script>
+  <script src="/cart-manager.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      loadShoesPage();
+      loadBagsPage();
     });
 
-    function applySizeFilter() {
-      loadShoesPage();
+    function applySortFilter() {
+      loadBagsPage();
     }
 
-    function applySortFilter() {
-      loadShoesPage();
+    function applyPriceFilter() {
+      loadBagsPage();
     }
 
     function clearAllFilters() {
-      document.getElementById('sizeFilter').value = '';
       document.getElementById('sortFilter').value = '';
-      loadShoesPage();
+      document.getElementById('priceFilter').value = '';
+      loadBagsPage();
     }
   </script>
 </body>

@@ -5,7 +5,7 @@ const products = [
     name: "Multicolor Mandala Flap Sling Bag",
     price: 799,
     category: "bags",
-    image: "Bags/mockupbee-uVT5GktsQ6o-unsplash.jpg",
+    image: "/Bags/mockupbee-uVT5GktsQ6o-unsplash.jpg",
     description: "Beautiful multicolor mandala design flap sling bag perfect for daily use. Spacious interior with multiple compartments."
   },
   {
@@ -13,7 +13,7 @@ const products = [
     name: "Mandrasto Casual Tote",
     price: 2499,
     category: "bags",
-    image: "Bags/pexels-vinta-supply-co-nyc-268013-842959.jpg",
+    image: "/Bags/pexels-vinta-supply-co-nyc-268013-842959.jpg",
     description: "Elegant casual tote bag with premium materials. Perfect for work or shopping with ample storage space."
   },
   {
@@ -21,7 +21,7 @@ const products = [
     name: "Premium Black Handbag",
     price: 1299,
     category: "bags",
-    image: "Bags/pexels-bertellifotografia-2905238.jpg",
+    image: "/Bags/pexels-bertellifotografia-2905238.jpg",
     description: "Classic black handbag with modern design. Features multiple pockets and comfortable handles for everyday elegance."
   },
   {
@@ -29,7 +29,7 @@ const products = [
     name: "Designer Leather Backpack",
     price: 3299,
     category: "bags",
-    image: "Bags/pexels-avinashpatel-1178525.jpg",
+    image: "/Bags/pexels-avinashpatel-1178525.jpg",
     description: "Premium leather backpack with multiple compartments. Perfect for work, travel, or daily commute. Durable and stylish."
   },
   {
@@ -37,7 +37,7 @@ const products = [
     name: "Vintage Canvas Messenger Bag",
     price: 1899,
     category: "bags",
-    image: "Bags/pexels-geyonk-1152077.jpg",
+    image: "/Bags/pexels-geyonk-1152077.jpg",
     description: "Stylish vintage canvas messenger bag with leather accents. Ideal for students and professionals."
   },
   {
@@ -45,7 +45,7 @@ const products = [
     name: "Luxury Evening Clutch",
     price: 2199,
     category: "bags",
-    image: "Bags/pexels-godisable-jacob-226636-934673.jpg",
+    image: "/Bags/pexels-godisable-jacob-226636-934673.jpg",
     description: "Elegant evening clutch with gold chain strap. Perfect for parties and formal events."
   },
   {
@@ -53,7 +53,7 @@ const products = [
     name: "Casual Crossbody Bag",
     price: 1499,
     category: "bags",
-    image: "Bags/pexels-flat-hito-294826-904350.jpg",
+    image: "/Bags/pexels-flat-hito-294826-904350.jpg",
     description: "Lightweight crossbody bag with adjustable strap. Perfect for hands-free convenience during outings."
   },
   {
@@ -61,7 +61,7 @@ const products = [
     name: "Professional Laptop Bag",
     price: 2799,
     category: "bags",
-    image: "Bags/pexels-godisable-jacob-226636-1936848.jpg",
+    image: "/Bags/pexels-godisable-jacob-226636-1936848.jpg",
     description: "Padded laptop bag with multiple pockets for accessories. Suitable for 15-inch laptops."
   },
   {
@@ -69,7 +69,7 @@ const products = [
     name: "Bohemian Fringe Handbag",
     price: 1799,
     category: "bags",
-    image: "Bags/pexels-jonathanborba-3155047.jpg",
+    image: "/Bags/pexels-jonathanborba-3155047.jpg",
     description: "Trendy bohemian style handbag with fringe details. Perfect for casual and festival looks."
   },
   {
@@ -77,7 +77,7 @@ const products = [
     name: "Mini Bucket Bag",
     price: 1399,
     category: "bags",
-    image: "Bags/pexels-marleneleppanen-1039518.jpg",
+    image: "/Bags/pexels-marleneleppanen-1039518.jpg",
     description: "Compact bucket bag with drawstring closure. Stylish and practical for everyday use."
   },
   {
@@ -85,7 +85,7 @@ const products = [
     name: "Executive Briefcase",
     price: 4299,
     category: "bags",
-    image: "Bags/pexels-mart-production-8801089.jpg",
+    image: "/Bags/pexels-mart-production-8801089.jpg",
     description: "Professional leather briefcase with combination lock. Perfect for business meetings and office use."
   },
   {
@@ -93,7 +93,7 @@ const products = [
     name: "Quilted Chain Purse",
     price: 2999,
     category: "bags",
-    image: "Bags/pexels-maxime-wouters-2155901030-34076070.jpg",
+    image: "/Bags/pexels-maxime-wouters-2155901030-34076070.jpg",
     description: "Luxury quilted purse with gold chain strap. Elegant design for sophisticated style."
   },
 
@@ -102,7 +102,7 @@ const products = [
     name: "Men's Casual Sneakers",
     price: 1899,
     category: "shoes",
-    image: "Shoes/pexels-obviouslyarthur-1102776.jpg",
+    image: "/Shoes/pexels-obviouslyarthur-1102776.jpg",
     description: "Comfortable men's sneakers perfect for daily wear. Breathable material with excellent cushioning and style."
   },
   {
@@ -110,7 +110,7 @@ const products = [
     name: "Women's Running Shoes",
     price: 2199,
     category: "shoes",
-    image: "Shoes/pexels-jeshoots-com-147458-7432.jpg",
+    image: "/Shoes/pexels-jeshoots-com-147458-7432.jpg",
     description: "High-performance women's running shoes with advanced cushioning technology. Perfect for fitness enthusiasts."
   },
   {
@@ -118,7 +118,7 @@ const products = [
     name: "Formal Leather Shoes",
     price: 1599,
     category: "shoes",
-    image: "Shoes/pexels-goumbik-292999.jpg",
+    image: "/Shoes/pexels-goumbik-292999.jpg",
     description: "Professional formal leather shoes crafted from genuine leather. Perfect for office wear and formal occasions."
   },
   {
@@ -126,7 +126,7 @@ const products = [
     name: "Women's High Heel Pumps",
     price: 2499,
     category: "shoes",
-    image: "Shoes/pexels-godisable-jacob-226636-1308324.jpg",
+    image: "/Shoes/pexels-godisable-jacob-226636-1308324.jpg",
     description: "Classic high heel pumps in genuine leather. Perfect for office wear and formal occasions."
   },
   {
@@ -134,7 +134,7 @@ const products = [
     name: "Men's Leather Loafers",
     price: 2199,
     category: "shoes",
-    image: "Shoes/pexels-pixabay-267320.jpg",
+    image: "/Shoes/pexels-pixabay-267320.jpg",
     description: "Comfortable leather loafers with cushioned insole. Ideal for casual and semi-formal wear."
   },
   {
@@ -142,7 +142,7 @@ const products = [
     name: "Women's Ankle Boots",
     price: 2799,
     category: "shoes",
-    image: "Shoes/pexels-lorena-martinez-1218850-2351858.jpg",
+    image: "/Shoes/pexels-lorena-martinez-1218850-2351858.jpg",
     description: "Stylish ankle boots with side zipper. Perfect for fall and winter fashion."
   },
   {
@@ -150,7 +150,7 @@ const products = [
     name: "Men's Sports Training Shoes",
     price: 2599,
     category: "shoes",
-    image: "Shoes/pexels-jddaniel-2385477.jpg",
+    image: "/Shoes/pexels-jddaniel-2385477.jpg",
     description: "High-performance training shoes with excellent grip and support. Perfect for gym and outdoor activities."
   },
   {
@@ -158,7 +158,7 @@ const products = [
     name: "Women's Ballet Flats",
     price: 1299,
     category: "shoes",
-    image: "Shoes/pexels-mnzoutfits-1598508.jpg",
+    image: "/Shoes/pexels-mnzoutfits-1598508.jpg",
     description: "Comfortable ballet flats in soft leather. Perfect for daily wear and office use."
   },
   {
@@ -166,7 +166,7 @@ const products = [
     name: "Men's Canvas Sneakers",
     price: 1499,
     category: "shoes",
-    image: "Shoes/pexels-chuck-3261069.jpg",
+    image: "/Shoes/pexels-chuck-3261069.jpg",
   
     description: "Classic canvas sneakers with rubber sole. Comfortable and versatile for casual wear."
   },
@@ -175,7 +175,7 @@ const products = [
     name: "Women's Sandals",
     price: 1799,
     category: "shoes",
-    image: "Shoes/pexels-monicore-134064.jpg",
+    image: "/Shoes/pexels-monicore-134064.jpg",
     description: "Elegant sandals with adjustable straps. Perfect for summer and casual outings."
   },
   {
@@ -183,7 +183,7 @@ const products = [
     name: "Men's Oxford Dress Shoes",
     price: 2999,
     category: "shoes",
-    image: "Shoes/pexels-mnzoutfits-1598505.jpg",
+    image: "/Shoes/pexels-mnzoutfits-1598505.jpg",
     description: "Premium Oxford dress shoes in genuine leather. Perfect for weddings and formal events."
   },
   {
@@ -191,7 +191,7 @@ const products = [
     name: "Women's Wedge Heels",
     price: 2299,
     category: "shoes",
-    image: "Shoes/pexels-didsss-2237456.jpg",
+    image: "/Shoes/pexels-didsss-2237456.jpg",
     description: "Comfortable wedge heels with platform sole. Stylish and comfortable for all-day wear."
   }
 ];
@@ -236,7 +236,7 @@ function ensureLoggedInBefore(action) {
     sessionStorage.setItem('pendingAction', JSON.stringify(action));
     showNotification('Please login to continue', 'warning');
     setTimeout(() => {
-      window.location.href = 'login.html';
+      window.location.href = '/login.html';
     }, 1500);
     return false;
   }
@@ -259,7 +259,7 @@ function productCardHtml(product) {
         <p class="product-description">${truncate(product.description, 65)}</p>
         <div class="product-price">${formatCurrency(product.price)}</div>
         <div class="product-actions">
-          <a href="product.html?id=${product.id}" class="btn btn-primary btn-full">
+          <a href="/Products/product.html?id=${product.id}" class="btn btn-primary btn-full">
             <i class="fas fa-eye"></i> View Details
           </a>
         </div>
@@ -300,7 +300,7 @@ function addToCart(productId, colorOverride = null, sizeOverride = null) {
     const success = window.addToCartWithVariant(productId, color, size, 1);
     if (success) {
       setTimeout(() => {
-        window.location.href = 'cart.html';
+        window.location.href = '/cart.html';
       }, 1500);
     }
   } else {
@@ -656,7 +656,7 @@ function clearGlobalSearch() {
 function applySearchFilter(searchTerm) {
   sessionStorage.setItem('searchTerm', searchTerm);
   
-  if (window.location.pathname.includes('products.html')) {
+  if (window.location.pathname.includes('bags.html')) {
     loadBagsPage();
   } else if (window.location.pathname.includes('shoes.html')) {
     loadShoesPage();
@@ -685,7 +685,7 @@ function loadProductDetail() {
   const productBreadcrumb = document.getElementById('productBreadcrumb');
   if (categoryBreadcrumb) {
     categoryBreadcrumb.textContent = product.category === 'bags' ? 'Bags' : 'Shoes';
-    categoryBreadcrumb.innerHTML = `<a href="${product.category === 'bags' ? 'products.html' : 'shoes.html'}">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
+    categoryBreadcrumb.innerHTML = `<a href="${product.category === 'bags' ? 'bags.html' : 'shoes.html'}">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
   }
   if (productBreadcrumb) {
     productBreadcrumb.textContent = product.name;
@@ -745,9 +745,7 @@ function loadProductDetail() {
           <button class="btn btn-primary btn-large" onclick="addToCart(${product.id})">
             <i class="fas fa-cart-plus"></i> Add to Cart
           </button>
-          <button class="btn btn-success btn-large" onclick="buyNow(${product.id})">
-            <i class="fas fa-bolt"></i> Buy Now
-          </button>
+         
         </div>
 
         <div class="product-features">
