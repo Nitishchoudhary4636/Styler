@@ -30,7 +30,7 @@ function loadHeader() {
             </button>
           </div>
           
-          <a href="cart.html" class="nav-link cart-link">
+          <a href="/cart.html" class="nav-link cart-link">
             <i class="fas fa-shopping-cart"></i>
             Cart (<span id="cartCount">0</span>)
           </a>

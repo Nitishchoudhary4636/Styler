@@ -304,7 +304,8 @@ function showShippingModal() {
     document.getElementById('landmark').value = savedAddress.landmark || '';
   }
   
-  modal.style.display = 'flex';
+  // modal.style.display = 'flex';
+  window.location.href = 'checkout.html';
 }
 
 function closeShippingModal() {

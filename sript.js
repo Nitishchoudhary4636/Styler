@@ -685,7 +685,7 @@ function loadProductDetail() {
   const productBreadcrumb = document.getElementById('productBreadcrumb');
   if (categoryBreadcrumb) {
     categoryBreadcrumb.textContent = product.category === 'bags' ? 'Bags' : 'Shoes';
-    categoryBreadcrumb.innerHTML = `<a href="${product.category === 'bags' ? 'bags.html' : 'shoes.html'}">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
+    categoryBreadcrumb.innerHTML = `<a href="/Products/${product.category}.html">${product.category === 'bags' ? 'Bags' : 'Shoes'}</a>`;
   }
   if (productBreadcrumb) {
     productBreadcrumb.textContent = product.name;
@@ -778,25 +778,24 @@ function loadProductDetail() {
 
 function buyNow(productId) {
   if (addToCart(productId)) {
+    setTimeout(() => {
+      window.location.href = '/checkout.html';
+    }, 1500);
   }
 }
 
 function showNotification(message, type = 'info') {
   if (window.showNotification) return;
-  
   const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
+  notification.className = `notification notification-popup ${type}`;
   notification.innerHTML = `
     <div class="notification-content">
       <i class="fas fa-${getNotificationIcon(type)}"></i>
       <span>${message}</span>
     </div>
   `;
-  
   document.body.appendChild(notification);
-  
   setTimeout(() => notification.classList.add('show'), 100);
-  
   setTimeout(() => {
     notification.classList.remove('show');
     setTimeout(() => {
