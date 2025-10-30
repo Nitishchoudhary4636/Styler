@@ -6,7 +6,9 @@ const products = [
     price: 799,
     category: "bags",
     image: "/Bags/mockupbee-uVT5GktsQ6o-unsplash.jpg",
-    description: "Beautiful multicolor mandala design flap sling bag perfect for daily use. Spacious interior with multiple compartments."
+    description: "Beautiful multicolor mandala design flap sling bag perfect for daily use. Spacious interior with multiple compartments.",
+  colors: ["Red", "Blue", "Green", "Black"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 2,
@@ -14,7 +16,9 @@ const products = [
     price: 2499,
     category: "bags",
     image: "/Bags/pexels-vinta-supply-co-nyc-268013-842959.jpg",
-    description: "Elegant casual tote bag with premium materials. Perfect for work or shopping with ample storage space."
+    description: "Elegant casual tote bag with premium materials. Perfect for work or shopping with ample storage space.",
+  colors: ["Brown", "Black", "Tan"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 3,
@@ -22,7 +26,9 @@ const products = [
     price: 1299,
     category: "bags",
     image: "/Bags/pexels-bertellifotografia-2905238.jpg",
-    description: "Classic black handbag with modern design. Features multiple pockets and comfortable handles for everyday elegance."
+    description: "Classic black handbag with modern design. Features multiple pockets and comfortable handles for everyday elegance.",
+  colors: ["Black", "Grey"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 7,
@@ -30,7 +36,9 @@ const products = [
     price: 3299,
     category: "bags",
     image: "/Bags/pexels-avinashpatel-1178525.jpg",
-    description: "Premium leather backpack with multiple compartments. Perfect for work, travel, or daily commute. Durable and stylish."
+    description: "Premium leather backpack with multiple compartments. Perfect for work, travel, or daily commute. Durable and stylish.",
+  colors: ["Brown", "Black"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 8,
@@ -38,7 +46,9 @@ const products = [
     price: 1899,
     category: "bags",
     image: "/Bags/pexels-geyonk-1152077.jpg",
-    description: "Stylish vintage canvas messenger bag with leather accents. Ideal for students and professionals."
+    description: "Stylish vintage canvas messenger bag with leather accents. Ideal for students and professionals.",
+  colors: ["Green", "Brown", "Black"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 9,
@@ -46,7 +56,9 @@ const products = [
     price: 2199,
     category: "bags",
     image: "/Bags/pexels-godisable-jacob-226636-934673.jpg",
-    description: "Elegant evening clutch with gold chain strap. Perfect for parties and formal events."
+    description: "Elegant evening clutch with gold chain strap. Perfect for parties and formal events.",
+  colors: ["Gold", "Black"],
+  sizes: ["Medium", "One Size"]
   },
   {
     id: 10,
@@ -54,7 +66,9 @@ const products = [
     price: 1499,
     category: "bags",
     image: "/Bags/pexels-flat-hito-294826-904350.jpg",
-    description: "Lightweight crossbody bag with adjustable strap. Perfect for hands-free convenience during outings."
+    description: "Lightweight crossbody bag with adjustable strap. Perfect for hands-free convenience during outings.",
+  colors: ["Red", "Black", "White"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 11,
@@ -62,7 +76,9 @@ const products = [
     price: 2799,
     category: "bags",
     image: "/Bags/pexels-godisable-jacob-226636-1936848.jpg",
-    description: "Padded laptop bag with multiple pockets for accessories. Suitable for 15-inch laptops."
+    description: "Padded laptop bag with multiple pockets for accessories. Suitable for 15-inch laptops.",
+  colors: ["Black", "Grey"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 12,
@@ -70,7 +86,9 @@ const products = [
     price: 1799,
     category: "bags",
     image: "/Bags/pexels-jonathanborba-3155047.jpg",
-    description: "Trendy bohemian style handbag with fringe details. Perfect for casual and festival looks."
+    description: "Trendy bohemian style handbag with fringe details. Perfect for casual and festival looks.",
+  colors: ["Brown", "Tan", "Black"],
+  sizes: ["Medium", "Large", "One Size"]
   },
   {
     id: 13,
@@ -78,24 +96,30 @@ const products = [
     price: 1399,
     category: "bags",
     image: "/Bags/pexels-marleneleppanen-1039518.jpg",
-    description: "Compact bucket bag with drawstring closure. Stylish and practical for everyday use."
+    description: "Compact bucket bag with drawstring closure. Stylish and practical for everyday use.",
+  colors: ["Pink", "Black", "White"],
+  sizes: ["Small", "Medium", "Large", "One Size"]
   },
-  {
-    id: 14,
-    name: "Executive Briefcase",
-    price: 4299,
-    category: "bags",
-    image: "/Bags/pexels-mart-production-8801089.jpg",
-    description: "Professional leather briefcase with combination lock. Perfect for business meetings and office use."
-  },
-  {
-    id: 15,
-    name: "Quilted Chain Purse",
-    price: 2999,
-    category: "bags",
-    image: "/Bags/pexels-maxime-wouters-2155901030-34076070.jpg",
-    description: "Luxury quilted purse with gold chain strap. Elegant design for sophisticated style."
-  },
+    {
+      id: 14,
+      name: "Executive Briefcase",
+      price: 4299,
+      category: "bags",
+      image: "/Bags/pexels-mart-production-8801089.jpg",
+      description: "Professional leather briefcase with combination lock. Perfect for business meetings and office use.",
+  colors: ["Black", "Brown"],
+  sizes: ["Medium", "Large", "One Size"]
+    },
+    {
+      id: 15,
+      name: "Quilted Chain Purse",
+      price: 2999,
+      category: "bags",
+      image: "/Bags/pexels-maxime-wouters-2155901030-34076070.jpg",
+      description: "Luxury quilted purse with gold chain strap. Elegant design for sophisticated style.",
+  colors: ["Black", "Gold"],
+  sizes: ["Medium", "One Size"]
+    },
 
   {
     id: 4,
@@ -103,7 +127,9 @@ const products = [
     price: 1899,
     category: "shoes",
     image: "/Shoes/pexels-obviouslyarthur-1102776.jpg",
-    description: "Comfortable men's sneakers perfect for daily wear. Breathable material with excellent cushioning and style."
+    description: "Comfortable men's sneakers perfect for daily wear. Breathable material with excellent cushioning and style.",
+  colors: ["Black", "White", "Blue", "Grey"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 5,
@@ -111,7 +137,9 @@ const products = [
     price: 2199,
     category: "shoes",
     image: "/Shoes/pexels-jeshoots-com-147458-7432.jpg",
-    description: "High-performance women's running shoes with advanced cushioning technology. Perfect for fitness enthusiasts."
+    description: "High-performance women's running shoes with advanced cushioning technology. Perfect for fitness enthusiasts.",
+  colors: ["Black", "White", "Pink", "Grey"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 6,
@@ -119,7 +147,9 @@ const products = [
     price: 1599,
     category: "shoes",
     image: "/Shoes/pexels-goumbik-292999.jpg",
-    description: "Professional formal leather shoes crafted from genuine leather. Perfect for office wear and formal occasions."
+    description: "Professional formal leather shoes crafted from genuine leather. Perfect for office wear and formal occasions.",
+  colors: ["Black", "Brown"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 16,
@@ -127,7 +157,9 @@ const products = [
     price: 2499,
     category: "shoes",
     image: "/Shoes/pexels-godisable-jacob-226636-1308324.jpg",
-    description: "Classic high heel pumps in genuine leather. Perfect for office wear and formal occasions."
+    description: "Classic high heel pumps in genuine leather. Perfect for office wear and formal occasions.",
+  colors: ["Black", "Red", "Beige"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 17,
@@ -135,7 +167,9 @@ const products = [
     price: 2199,
     category: "shoes",
     image: "/Shoes/pexels-pixabay-267320.jpg",
-    description: "Comfortable leather loafers with cushioned insole. Ideal for casual and semi-formal wear."
+    description: "Comfortable leather loafers with cushioned insole. Ideal for casual and semi-formal wear.",
+  colors: ["Brown", "Black"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 18,
@@ -143,7 +177,9 @@ const products = [
     price: 2799,
     category: "shoes",
     image: "/Shoes/pexels-lorena-martinez-1218850-2351858.jpg",
-    description: "Stylish ankle boots with side zipper. Perfect for fall and winter fashion."
+    description: "Stylish ankle boots with side zipper. Perfect for fall and winter fashion.",
+  colors: ["Black", "Brown"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 19,
@@ -151,7 +187,9 @@ const products = [
     price: 2599,
     category: "shoes",
     image: "/Shoes/pexels-jddaniel-2385477.jpg",
-    description: "High-performance training shoes with excellent grip and support. Perfect for gym and outdoor activities."
+    description: "High-performance training shoes with excellent grip and support. Perfect for gym and outdoor activities.",
+  colors: ["Black", "Blue", "Grey"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 20,
@@ -159,7 +197,9 @@ const products = [
     price: 1299,
     category: "shoes",
     image: "/Shoes/pexels-mnzoutfits-1598508.jpg",
-    description: "Comfortable ballet flats in soft leather. Perfect for daily wear and office use."
+    description: "Comfortable ballet flats in soft leather. Perfect for daily wear and office use.",
+  colors: ["Pink", "Black", "White"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 21,
@@ -167,8 +207,9 @@ const products = [
     price: 1499,
     category: "shoes",
     image: "/Shoes/pexels-chuck-3261069.jpg",
-  
-    description: "Classic canvas sneakers with rubber sole. Comfortable and versatile for casual wear."
+    description: "Classic canvas sneakers with rubber sole. Comfortable and versatile for casual wear.",
+  colors: ["Black", "White", "Blue"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 22,
@@ -176,7 +217,9 @@ const products = [
     price: 1799,
     category: "shoes",
     image: "/Shoes/pexels-monicore-134064.jpg",
-    description: "Elegant sandals with adjustable straps. Perfect for summer and casual outings."
+    description: "Elegant sandals with adjustable straps. Perfect for summer and casual outings.",
+  colors: ["Black", "White", "Tan"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 23,
@@ -184,7 +227,9 @@ const products = [
     price: 2999,
     category: "shoes",
     image: "/Shoes/pexels-mnzoutfits-1598505.jpg",
-    description: "Premium Oxford dress shoes in genuine leather. Perfect for weddings and formal events."
+    description: "Premium Oxford dress shoes in genuine leather. Perfect for weddings and formal events.",
+  colors: ["Black", "Brown"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   },
   {
     id: 24,
@@ -192,9 +237,14 @@ const products = [
     price: 2299,
     category: "shoes",
     image: "/Shoes/pexels-didsss-2237456.jpg",
-    description: "Comfortable wedge heels with platform sole. Stylish and comfortable for all-day wear."
+    description: "Comfortable wedge heels with platform sole. Stylish and comfortable for all-day wear.",
+  colors: ["Black", "Beige", "Brown"],
+  sizes: ["7", "8", "9", "10", "11", "12"]
   }
 ];
+
+
+
 
 function formatCurrency(amount) {
   const numAmount = parseFloat(amount) || 0;
@@ -691,13 +741,13 @@ function loadProductDetail() {
     productBreadcrumb.textContent = product.name;
   }
 
-  const colorOptions = product.category === "bags" 
-    ? ["Black", "Brown", "Navy", "Red", "White", "Grey", "Tan"]
-    : ["Black", "White", "Blue", "Grey", "Red", "Navy", "Green"];
+  const colorOptions = Array.isArray(product.colors) && product.colors.length > 0
+    ? product.colors
+    : ["Black"];
     
-  const sizeOptions = product.category === "shoes"
-    ? ["7", "8", "9", "10", "11", "12"]
-    : ["Small", "Medium", "Large", "One Size"];
+  const sizeOptions = Array.isArray(product.sizes) && product.sizes.length > 0
+    ? product.sizes
+    : ["Medium"];
 
   container.innerHTML = `
     <div class="product-detail-grid">
@@ -959,4 +1009,83 @@ if (typeof module !== 'undefined' && module.exports) {
     loadShoesPage,
     loadProductDetail
   };
+}
+
+
+
+function pushMCPListView(category) {
+  if (!category) {
+    console.warn('pushMCPListView: category is required');
+    return;
+  }
+  const itemsArray = products.filter(p => p.category === category);
+  window.dataLayer.push({
+    event: 'MCP',
+    timestamp: new Date().toISOString(),
+    mcpVersion: '1.0.0',
+    MCP: {
+      currency: 'INR',
+      itemListId: category + '_Listing',
+      itemListName: 'Products',
+      url: window.location.href,
+      items: itemsArray
+    }
+  });
+}
+
+function pushMCPContactUsView(){
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  const mcpItems = cart.map((item, idx) => ({
+    index: String(idx),
+    item_id: String(item.id),
+    item_name: item.name,
+    price: String(item.price),
+    quantity: String(item.quantity),
+    color: item.color || '',
+    size: item.size || '',
+    imageUrl: item.image || ''
+  }));
+  window.dataLayer.push({
+    event: 'MCP',
+    MCP: {
+      currency: 'INR',
+      pageType: 'view_cart',
+      pageName: 'Basket page',
+      items: mcpItems
+    }
+  });
+}
+function pushMCPProductView() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = parseInt(urlParams.get("id"));
+  const product = products.find(p => p.id === productId);
+
+  if (!product) return;
+
+  window.dataLayer.push({
+    event: 'Mcp',
+    timestamp: new Date().toISOString(),
+    mcpVersion: '1.0.0',
+    MCP: {
+      pageType: 'Product',
+      pageName: `Product - ${product.name}`,
+     
+      Item: {
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        currency: 'INR',
+        availability: 'in_stock',
+        url: window.location.href,
+        quantity: product.quantity || 1,
+        imageUrl: product.image || '',
+        description: product.description || '',
+        color:product.colors || [],
+        size:product.sizes || []
+      }
+    }
+  });
+
+  console.log('✅ MCP productView pushed:', window.dataLayer.slice(-1)[0]);
 }

@@ -54,8 +54,8 @@ function addToCartWithVariant(productId, color = null, size = null, quantity = 1
       name: product.name,
       price: product.price,
       image: product.image,
-      color: color,
-      size: size,
+      color: product.color,
+      size: product.size,
       quantity: quantity,
       category: product.category
     });
@@ -497,7 +497,8 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
       quantity: item.quantity,
       price: item.price,
       color: item.color,
-      size: item.size
+      size: item.size,
+      image: item.image
     })),
     shippingAddress: {
       fullName: shippingAddress.fullName,
@@ -520,7 +521,14 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     const localOrder = {
       id: savedOrder.id || 'ORD-' + Date.now(),
       userId: currentUserData.email,
-      items: cart,
+      items: cart.map(item => ({
+        name: item.name,
+        image: item.image,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price
+      })),
       subtotal: subtotal,
       shipping: shipping,
       tax: tax,
@@ -588,26 +596,32 @@ async function loadOrdersPage() {
         const formattedOrders = ordersArray.map(order => ({
           id: order.id || order.orderId || 'ORD-' + Date.now(),
           userId: currentUserData.email,
-          items: order.items || [
-            {
-              productName: 'Order Item',
-              price: order.totalAmount || 0,
-              quantity: order.itemCount || 1,
-              color: 'N/A',
-              size: 'N/A'
-            }
-          ],
-          subtotal: order.totalAmount || 0,
-          shipping: 0,
-          tax: 0,
-          total: order.totalAmount || 0,
+          items: Array.isArray(order.items) ? order.items.map(item => ({
+            name: item.productName || item.name || item.title || 'Order Item',
+            image: item.image || item.productImage || item.img || '',
+            color: item.color || item.productColor || '',
+            size: item.size || item.productSize || '',
+            quantity: item.quantity || item.qty || item.count || 1,
+            price: item.price || item.productPrice || 0
+          })) : [{
+            name: order.productName || order.name || order.title || 'Order Item',
+            image: order.image || order.productImage || order.img || '',
+            color: order.color || order.productColor || '',
+            size: order.size || order.productSize || '',
+            quantity: order.itemCount || order.quantity || 1,
+            price: order.totalAmount || order.price || 0
+          }],
+          subtotal: order.subtotal || order.totalAmount || 0,
+          shipping: order.shipping || 0,
+          tax: order.tax || 0,
+          total: order.total || order.totalAmount || 0,
           shippingAddress: order.shippingAddress || {
             fullName: currentUserData.name || 'Customer',
             phone: currentUserData.phone || 'Not provided',
             address: 'Address not available',
             city: 'City not provided',
             state: 'State not provided',
-            zipCode: 'ZIP not provided'
+            pincode: 'PIN not provided'
           },
           status: order.status || 'CONFIRMED',
           orderDate: order.orderDate || new Date().toISOString(),

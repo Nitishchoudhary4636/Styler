@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bags Collection - Styler</title>
@@ -102,7 +105,8 @@
   <script src="/cart-manager.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      loadBagsPage();
+  loadBagsPage();
+  pushMCPListView('bags');
     });
 
     function applySortFilter() {
@@ -119,5 +123,6 @@
       loadBagsPage();
     }
   </script>
+  
 </body>
 </html>

@@ -69,5 +69,30 @@
   <script src="header.js"></script>
   <script src="footer.js"></script>
   <script src="checkout.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const mcpItems = cart.map((item, idx) => ({
+      index: String(idx),
+      item_id: String(item.id),
+      item_name: item.name,
+      price: String(item.price),
+      quantity: String(item.quantity),
+      color: item.color || '',
+      size: item.size || '',
+      imageUrl: item.image || ''
+    }));
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'MCP',
+      MCP: {
+        currency: 'INR', // Change to 'GBP' if needed
+        pageType: 'view_checkout',
+        pageName: 'Checkout page',
+        items: mcpItems
+      }
+    });
+  });
+</script>
 </body>
 </html>

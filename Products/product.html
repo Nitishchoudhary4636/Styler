@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details - Styler</title>
@@ -47,7 +51,7 @@
 
 
   <div id="footer-placeholder"></div>
-/
+
  
   <script src="/sript.js"></script>
   <script src="/header.js"></script>
@@ -57,6 +61,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       loadProductDetail();
       loadRelatedProducts();
+      pushMCPProductView();
     });
 
     function loadRelatedProducts() {
