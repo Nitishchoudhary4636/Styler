@@ -1,4 +1,4 @@
-
+window.dataLayer = window.dataLayer || [];
 const products = [
   {
     id: 1,
@@ -70,7 +70,7 @@ const products = [
   colors: ["Red", "Black", "White"],
   sizes: ["Medium", "Large", "One Size"]
   },
-  {
+  { 
     id: 11,
     name: "Professional Laptop Bag",
     price: 2799,
