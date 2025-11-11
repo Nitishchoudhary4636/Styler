@@ -107,23 +107,39 @@
   <script src="/footer.js"></script>
   <script src="/cart-manager.js"></script>
   <script>
+    // Helper to sync cart for Salesforce Personalization
+    function updateSFMCartItems() {
+      if (typeof getCart === 'function') {
+        window.cartItems = getCart();
+      } else {
+        window.cartItems = [];
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        pushMCPListView('shoes');
+      pushMCPListView('shoes');
       loadShoesPage();
+      updateSFMCartItems();
     });
+
+    // Update cartItems whenever cart changes (optional: add to cart, remove, etc.)
+    window.updateSFMCartItems = updateSFMCartItems;
 
     function applySizeFilter() {
       loadShoesPage();
+      updateSFMCartItems();
     }
 
     function applySortFilter() {
       loadShoesPage();
+      updateSFMCartItems();
     }
 
     function clearAllFilters() {
       document.getElementById('sizeFilter').value = '';
       document.getElementById('sortFilter').value = '';
       loadShoesPage();
+      updateSFMCartItems();
     }
   </script>
 </body>
