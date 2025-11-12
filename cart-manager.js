@@ -272,17 +272,13 @@ function proceedToCheckout() {
     return;
   }
   
-  // TEMPORARY: Skip login check for testing
   if (!isLoggedIn()) {
-    // Create temporary user for testing
-    const tempUser = {
-      email: 'guest@styler.com',
-      fullName: 'Guest User',
-      userId: 'guest-' + Date.now()
-    };
-    localStorage.setItem('currentUser', JSON.stringify(tempUser));
-    localStorage.setItem('userEmail', tempUser.email);
-    showNotification('Proceeding as guest user...', 'info');
+    sessionStorage.setItem('returnUrl', 'checkout.html');
+    showNotification('Please login to proceed to checkout', 'warning');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+    return;
   }
   
   showShippingModal();
