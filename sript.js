@@ -1034,6 +1034,7 @@ function pushMCPListView(category) {
 }
 
 function pushMCPContactUsView(){
+function pushMCPCartView(){
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
   const mcpItems = cart.map((item, idx) => ({
     index: String(idx),
@@ -1045,6 +1046,29 @@ function pushMCPContactUsView(){
     size: item.size || '',
     imageUrl: item.image || ''
   }));
+  
+  // This is the structure the sitemap is looking for
+  const ecommerceData = {
+    event: 'view_cart',
+    ecommerce: {
+      currency: 'INR',
+      cart: {
+        products: cart.map(item => ({
+          id: String(item.id),
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          category: item.category,
+          variant: `${item.color} - ${item.size}`
+        }))
+      }
+    }
+  };
+
+  window.dataLayer.push(ecommerceData);
+  console.log('✅ Pushed cart data to dataLayer:', ecommerceData);
+
+  // You can keep your original MCP push if it's used elsewhere
   window.dataLayer.push({
     event: 'MCP',
     MCP: {
@@ -1054,6 +1078,8 @@ function pushMCPContactUsView(){
       items: mcpItems
     }
   });
+    MCP: { ... } // Your original MCP object here
+  }));
 }
 function pushMCPProductView() {
   const urlParams = new URLSearchParams(window.location.search);
