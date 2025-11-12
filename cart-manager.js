@@ -514,12 +514,12 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
   try {
     showNotification('Placing order...', 'info');
     
-    // Save order to backend
-    const savedOrder = await ApiService.createOrder(orderData);
+    // Save order to backend - REPLACED WITH LOCALSTORAGE
+    // const savedOrder = await ApiService.createOrder(orderData);
     
     // Also save to localStorage as backup
     const localOrder = {
-      id: savedOrder.id || 'ORD-' + Date.now(),
+      id: 'ORD-' + Date.now(), // Removed savedOrder.id
       userId: currentUserData.email,
       items: cart.map(item => ({
         name: item.name,
@@ -583,67 +583,11 @@ async function loadOrdersPage() {
     
     // Try to fetch orders from backend first
     if (currentUserData.id) {
-      try {
-        console.log('📡 Fetching orders from backend for user ID:', currentUserData.id);
-        const backendOrders = await ApiService.getUserOrders(currentUserData.id);
-        console.log('✅ Backend orders received:', backendOrders);
-        
-        // Check if backendOrders is an array
-        const ordersArray = Array.isArray(backendOrders) ? backendOrders : [];
-        console.log('📊 Processing', ordersArray.length, 'orders');
-        
-        // Convert backend orders to frontend format if needed
-        const formattedOrders = ordersArray.map(order => ({
-          id: order.id || order.orderId || 'ORD-' + Date.now(),
-          userId: currentUserData.email,
-          items: Array.isArray(order.items) ? order.items.map(item => ({
-            name: item.productName || item.name || item.title || 'Order Item',
-            image: item.image || item.productImage || item.img || '',
-            color: item.color || item.productColor || '',
-            size: item.size || item.productSize || '',
-            quantity: item.quantity || item.qty || item.count || 1,
-            price: item.price || item.productPrice || 0
-          })) : [{
-            name: order.productName || order.name || order.title || 'Order Item',
-            image: order.image || order.productImage || order.img || '',
-            color: order.color || order.productColor || '',
-            size: order.size || order.productSize || '',
-            quantity: order.itemCount || order.quantity || 1,
-            price: order.totalAmount || order.price || 0
-          }],
-          subtotal: order.subtotal || order.totalAmount || 0,
-          shipping: order.shipping || 0,
-          tax: order.tax || 0,
-          total: order.total || order.totalAmount || 0,
-          shippingAddress: order.shippingAddress || {
-            fullName: currentUserData.name || 'Customer',
-            phone: currentUserData.phone || 'Not provided',
-            address: 'Address not available',
-            city: 'City not provided',
-            state: 'State not provided',
-            pincode: 'PIN not provided'
-          },
-          status: order.status || 'CONFIRMED',
-          orderDate: order.orderDate || new Date().toISOString(),
-          estimatedDelivery: order.estimatedDelivery || getEstimatedDelivery(),
-          paymentMethod: order.paymentMethod || 'Cash on Delivery',
-          trackingNumber: order.trackingNumber || 'TRK-' + (order.orderId || Date.now())
-        }));
-        
-        allOrders = formattedOrders;
-        console.log('✅ Orders loaded successfully:', allOrders.length, 'orders');
-        
-        // Also update localStorage with backend data
-        localStorage.setItem('orders', JSON.stringify(formattedOrders));
-      } catch (backendError) {
-        console.error('❌ Backend fetch failed:', backendError);
-        console.log('🔄 Falling back to localStorage');
-        // Fallback to localStorage
-        allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-      }
+      // REMOVED: Backend fetch logic. We will now only use localStorage.
+      console.log('🔄 Using localStorage for orders.');
+      allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
     } else {
       console.log('⚠️ No user ID found, using localStorage');
-      // Fallback to localStorage
       allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
     }
   } catch (error) {

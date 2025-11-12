@@ -138,6 +138,31 @@
       hideAuthMessage();
     }
 
+    // --- Client-Side Auth Functions (No Backend) ---
+
+    function clientSideSignup(userData) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const userExists = users.some(user => user.email === userData.email);
+
+      if (userExists) {
+        throw new Error('An account with this email already exists.');
+      }
+
+      users.push(userData);
+      localStorage.setItem('users', JSON.stringify(users));
+      return userData;
+    }
+
+    function clientSideLogin(email, password) {
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (!user) {
+        throw new Error('Invalid email or password.');
+      }
+      return user;
+    }
+
     async function handleAuth(e) {
       e.preventDefault();
       
@@ -173,7 +198,7 @@
           
           
           const userData = { name: name.trim(), email, password, phone: phone.trim() };
-          const user = await ApiService.registerUser(userData);
+          const user = clientSideSignup(userData); // Replaced ApiService
           
           showAuthMessage('Account created successfully! Please login.', 'success');
           
@@ -183,7 +208,7 @@
           
         } else {
     
-          const user = await ApiService.loginUser(email, password);
+          const user = clientSideLogin(email, password); // Replaced ApiService
           
       
           localStorage.setItem('currentUser', JSON.stringify(user));
