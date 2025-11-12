@@ -1077,9 +1077,7 @@ function pushMCPCartView(){
       pageName: 'Basket page',
       items: mcpItems
     }
-  });
-    MCP: { ... } // Your original MCP object here
-  }));
+  }); 
 }
 function pushMCPProductView() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -1115,3 +1113,5 @@ function pushMCPProductView() {
 
   console.log('✅ MCP productView pushed:', window.dataLayer.slice(-1)[0]);
 }
+}
+
