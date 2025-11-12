@@ -114,39 +114,31 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Place order logic
-function placeOrder() {
+async function placeOrder() {
   const addr = getAddress();
   if (!addr) {
     alert('Please enter your delivery address.');
     showAddressForm();
     return;
   }
+
   const cart = getCart();
   if (!cart.length) {
     alert('Your cart is empty.');
     window.location.href = 'cart.html';
     return;
   }
-  const payment = document.querySelector('input[name="payment"]:checked').value;
+
+  // Calculate totals
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   let shipping = document.querySelector('input[name="shipping"]:checked').value === 'express' ? 129 : 59;
-  let subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   if (subtotal >= 1500) shipping = 0;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
-  // Save order
-  const order = {
-    id: 'ORD-' + Date.now(),
-    items: cart,
-    subtotal,
-    shipping,
-    tax,
-    total,
-    address: addr,
-    payment
-  };
-  localStorage.setItem('lastOrder', JSON.stringify(order));
-  localStorage.removeItem('cart');
-  window.location.href = 'orders.html';
+
+  // Use the centralized completeCheckout function from cart-manager.js
+  await completeCheckout(addr, subtotal, shipping, tax, total);
 }
+
 window.placeOrder = placeOrder;
 window.showAddressForm = showAddressForm;
