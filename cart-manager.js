@@ -54,8 +54,8 @@ function addToCartWithVariant(productId, color = null, size = null, quantity = 1
       name: product.name,
       price: product.price,
       image: product.image,
-      color: product.color,
-      size: product.size,
+      color: color,
+      size: size,
       quantity: quantity,
       category: product.category
     });
