@@ -785,6 +785,9 @@ function showOrderSuccess(orderId, total) {
   const order = allOrders.find(o => o.id === orderId);
   if (!order) return;
   
+  // Push purchase event to dataLayer for analytics
+  pushMCPPurchase(order);
+
   document.getElementById('orderIdDisplay').textContent = orderId;
   document.getElementById('orderTotalDisplay').textContent = formatCurrency(parseInt(total));
   document.getElementById('deliveryDateDisplay').textContent = new Date(order.estimatedDelivery).toLocaleDateString();
