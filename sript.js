@@ -1147,3 +1147,36 @@ function pushMCPPurchase(order) {
   window.dataLayer.push(purchaseData);
   console.log('✅ Pushed purchase data to dataLayer:', purchaseData);
 }
+
+function pushMCPPurchase(order) {
+  if (!order || !order.items) {
+    console.error('pushMCPPurchase: Invalid order object provided.');
+    return;
+  }
+
+  const purchaseData = {
+    event: 'purchase',
+    ecommerce: {
+      purchase: {
+        actionField: {
+          id: order.id,
+          affiliation: 'Styler Online Store',
+          revenue: order.total,
+          tax: order.tax,
+          shipping: order.shipping
+        },
+        products: order.items.map(item => ({
+          name: item.name,
+          id: item.id,
+          price: item.price,
+          category: item.category,
+          variant: `${item.color} - ${item.size}`,
+          quantity: item.quantity
+        }))
+      }
+    }
+  };
+
+  window.dataLayer.push(purchaseData);
+  console.log('✅ Pushed purchase data to dataLayer:', purchaseData);
+}
