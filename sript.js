@@ -1033,25 +1033,17 @@ function pushMCPListView(category) {
   });
 }
 
-function pushMCPContactUsView(){
-function pushMCPCartView(){
+function pushMCPContactUsView() {
+  // This function is currently empty, but the structure is now correct.
+  console.log("MCP Contact Us View called.");
+}
+
+function pushMCPCartView() {
   const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-  const mcpItems = cart.map((item, idx) => ({
-    index: String(idx),
-    item_id: String(item.id),
-    item_name: item.name,
-    price: String(item.price),
-    quantity: String(item.quantity),
-    color: item.color || '',
-    size: item.size || '',
-    imageUrl: item.image || ''
-  }));
-  
-  // This is the structure the sitemap is looking for
-  const ecommerceData = {
+
+  window.dataLayer.push({
     event: 'view_cart',
     ecommerce: {
-      currency: 'INR',
       cart: {
         products: cart.map(item => ({
           id: String(item.id),
@@ -1063,22 +1055,11 @@ function pushMCPCartView(){
         }))
       }
     }
-  };
+  });
 
-  window.dataLayer.push(ecommerceData);
-  console.log('✅ Pushed cart data to dataLayer:', ecommerceData);
-
-  // You can keep your original MCP push if it's used elsewhere
-  window.dataLayer.push({
-    event: 'MCP',
-    MCP: {
-      currency: 'INR',
-      pageType: 'view_cart',
-      pageName: 'Basket page',
-      items: mcpItems
-    }
-  }); 
+  console.log("🛒 Cart MCP View pushed");
 }
+
 function pushMCPProductView() {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = parseInt(urlParams.get("id"));
@@ -1087,51 +1068,36 @@ function pushMCPProductView() {
   if (!product) return;
 
   window.dataLayer.push({
-    event: 'Mcp',
-    timestamp: new Date().toISOString(),
-    mcpVersion: '1.0.0',
+    event: 'MCP',
     MCP: {
       pageType: 'Product',
       pageName: `Product - ${product.name}`,
-     
       Item: {
-        id: product.id,
+        id: String(product.id),
         name: product.name,
         category: product.category,
         price: product.price,
         currency: 'INR',
         availability: 'in_stock',
         url: window.location.href,
-        quantity: product.quantity || 1,
         imageUrl: product.image || '',
         description: product.description || '',
-        color:product.colors || [],
-        size:product.sizes || []
+        color: product.colors || [],
+        size: product.sizes || []
       }
     }
   });
 
-  console.log('✅ MCP productView pushed:', window.dataLayer.slice(-1)[0]);
-}
+  console.log("✅ Correct MCP Product View pushed:", window.dataLayer.slice(-1)[0]);
 }
 
 function pushMCPPurchase(order) {
-  if (!order || !order.items) {
-    console.error('pushMCPPurchase: Invalid order object provided.');
-    return;
-  }
+  if (!order || !order.items) return;
 
-  const purchaseData = {
+  window.dataLayer.push({
     event: 'purchase',
     ecommerce: {
       purchase: {
-        actionField: {
-          id: order.id,
-          affiliation: 'Styler Online Store',
-          revenue: order.total,
-          tax: order.tax,
-          shipping: order.shipping
-        },
         products: order.items.map(item => ({
           name: item.name,
           id: item.id,
@@ -1142,41 +1108,7 @@ function pushMCPPurchase(order) {
         }))
       }
     }
-  };
+  });
 
-  window.dataLayer.push(purchaseData);
-  console.log('✅ Pushed purchase data to dataLayer:', purchaseData);
-}
-
-function pushMCPPurchase(order) {
-  if (!order || !order.items) {
-    console.error('pushMCPPurchase: Invalid order object provided.');
-    return;
-  }
-
-  const purchaseData = {
-    event: 'purchase',
-    ecommerce: {
-      purchase: {
-        actionField: {
-          id: order.id,
-          affiliation: 'Styler Online Store',
-          revenue: order.total,
-          tax: order.tax,
-          shipping: order.shipping
-        },
-        products: order.items.map(item => ({
-          name: item.name,
-          id: item.id,
-          price: item.price,
-          category: item.category,
-          variant: `${item.color} - ${item.size}`,
-          quantity: item.quantity
-        }))
-      }
-    }
-  };
-
-  window.dataLayer.push(purchaseData);
-  console.log('✅ Pushed purchase data to dataLayer:', purchaseData);
+  console.log("💰 Purchase event pushed");
 }
