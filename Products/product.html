@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script>
-  window.dataLayer = window.dataLayer || [];
-  pushMCPProductView();
-  </script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details - Styler</title>
@@ -93,6 +88,11 @@
         window.location.href = 'cart.html';
       }, 500);
     }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        pushMCPProductView();
+    });
   </script>
 </body>
 </html>
