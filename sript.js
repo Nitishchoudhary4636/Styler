@@ -1,4 +1,105 @@
 window.dataLayer = window.dataLayer || [];
+
+function pushMCPListView(category) {
+  if (!category) {
+    console.warn('pushMCPListView: category is required');
+    return;
+  }
+  const itemsArray = products.filter(p => p.category === category);
+  window.dataLayer.push({
+    event: 'MCP',
+    timestamp: new Date().toISOString(),
+    mcpVersion: '1.0.0',
+    MCP: {
+      currency: 'INR',
+      itemListId: category + '_Listing',
+      itemListName: 'Products',
+      url: window.location.href,
+      items: itemsArray
+    }
+  });
+}
+
+function pushMCPContactUsView() {
+  // This function is currently empty, but the structure is now correct.
+  console.log("MCP Contact Us View called.");
+}
+
+function pushMCPCartView() {
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+  window.dataLayer.push({
+    event: 'view_cart',
+    ecommerce: {
+      cart: {
+        products: cart.map(item => ({
+          id: String(item.id),
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          category: item.category,
+          variant: `${item.color} - ${item.size}`
+        }))
+      }
+    }
+  });
+
+  console.log("🛒 Cart MCP View pushed");
+}
+
+function pushMCPProductView() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = parseInt(urlParams.get("id"));
+  const product = products.find(p => p.id === productId);
+
+  if (!product) return;
+
+  window.dataLayer.push({
+    event: 'MCP',
+    MCP: {
+      pageType: 'Product',
+      pageName: `Product - ${product.name}`,
+      Item: {
+        id: String(product.id),
+        name: product.name,
+        category: product.category,
+        price: product.price,
+        currency: 'INR',
+        availability: 'in_stock',
+        url: window.location.href,
+        imageUrl: product.image || '',
+        description: product.description || '',
+        color: product.colors || [],
+        size: product.sizes || []
+      }
+    }
+  });
+
+  console.log("✅ Correct MCP Product View pushed:", window.dataLayer.slice(-1)[0]);
+}
+
+function pushMCPPurchase(order) {
+  if (!order || !order.items) return;
+
+  window.dataLayer.push({
+    event: 'purchase',
+    ecommerce: {
+      purchase: {
+        products: order.items.map(item => ({
+          name: item.name,
+          id: item.id,
+          price: item.price,
+          category: item.category,
+          variant: `${item.color} - ${item.size}`,
+          quantity: item.quantity
+        }))
+      }
+    }
+  });
+
+  console.log("💰 Purchase event pushed");
+}
+
 const products = [
   {
     id: 1,
@@ -728,6 +829,8 @@ function loadProductDetail() {
     return;
   }
 
+  pushMCPProductView();
+
   const container = document.getElementById("productDetail");
   if (!container) return;
 
@@ -1009,106 +1112,4 @@ if (typeof module !== 'undefined' && module.exports) {
     loadShoesPage,
     loadProductDetail
   };
-}
-
-
-
-function pushMCPListView(category) {
-  if (!category) {
-    console.warn('pushMCPListView: category is required');
-    return;
-  }
-  const itemsArray = products.filter(p => p.category === category);
-  window.dataLayer.push({
-    event: 'MCP',
-    timestamp: new Date().toISOString(),
-    mcpVersion: '1.0.0',
-    MCP: {
-      currency: 'INR',
-      itemListId: category + '_Listing',
-      itemListName: 'Products',
-      url: window.location.href,
-      items: itemsArray
-    }
-  });
-}
-
-function pushMCPContactUsView() {
-  // This function is currently empty, but the structure is now correct.
-  console.log("MCP Contact Us View called.");
-}
-
-function pushMCPCartView() {
-  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-
-  window.dataLayer.push({
-    event: 'view_cart',
-    ecommerce: {
-      cart: {
-        products: cart.map(item => ({
-          id: String(item.id),
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          category: item.category,
-          variant: `${item.color} - ${item.size}`
-        }))
-      }
-    }
-  });
-
-  console.log("🛒 Cart MCP View pushed");
-}
-
-function pushMCPProductView() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = parseInt(urlParams.get("id"));
-  const product = products.find(p => p.id === productId);
-
-  if (!product) return;
-
-  window.dataLayer.push({
-    event: 'MCP',
-    MCP: {
-      pageType: 'Product',
-      pageName: `Product - ${product.name}`,
-      Item: {
-        id: String(product.id),
-        name: product.name,
-        category: product.category,
-        price: product.price,
-        currency: 'INR',
-        availability: 'in_stock',
-        url: window.location.href,
-        imageUrl: product.image || '',
-        description: product.description || '',
-        color: product.colors || [],
-        size: product.sizes || []
-      }
-    }
-  });
-
-  console.log("✅ Correct MCP Product View pushed:", window.dataLayer.slice(-1)[0]);
-}
-
-function pushMCPPurchase(order) {
-  if (!order || !order.items) return;
-
-  window.dataLayer.push({
-    event: 'purchase',
-    ecommerce: {
-      purchase: {
-        products: order.items.map(item => ({
-          name: item.name,
-          id: item.id,
-          price: item.price,
-          category: item.category,
-          variant: `${item.color} - ${item.size}`,
-          quantity: item.quantity
-        }))
-      }
-    }
-  });
-
-  console.log("💰 Purchase event pushed");
 }
