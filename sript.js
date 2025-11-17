@@ -1,4 +1,4 @@
-window.dataLayer = window.dataLayer || [];
+// window.dataLayer = window.dataLayer || [];
 
 function pushMCPListView(category) {
   if (!category) {
