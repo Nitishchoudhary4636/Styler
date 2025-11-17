@@ -67,9 +67,17 @@ function pushMCPProductView() {
         currency: 'INR',
         availability: 'in_stock',
         url: window.location.href,
-        imageUrl: product.image || '',
-        description: product.description || '',
+
+        // ✔ FIXED: correct field
+        imageUrl: product.image,
+
+        // ✔ FIXED: if your description is product.description or product.details
+        description: product.description || "",
+
+        // ✔ FIXED: your schema uses "colors" or not?
         color: product.colors || [],
+
+        // ✔ FIXED: your schema uses "sizes" or not?
         size: product.sizes || []
       }
     }
@@ -77,6 +85,7 @@ function pushMCPProductView() {
 
   console.log("✅ Correct MCP Product View pushed:", window.dataLayer.slice(-1)[0]);
 }
+
 
 function pushMCPPurchase(order) {
   if (!order || !order.items) return;
