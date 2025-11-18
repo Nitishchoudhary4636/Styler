@@ -4,15 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us - Styler</title>
+
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23e74c3c' d='M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.7 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-6.2 6.9-17.1 6.9-23.3 0l-232-256c-7.6-8.5-8.3-21.2-1.5-30.4l112-152zm154.3 8.2c-6.2 0-11.3 5.1-11.3 11.3v60.5c0 6.2 5.1 11.3 11.3 11.3s11.3-5.1 11.3-11.3V53.3c0-6.2-5.1-11.3-11.3-11.3z'/%3E%3C/svg%3E" type="image/svg+xml">
+
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <script type="text/javascript" src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
-</head>
-<body>
-  
-  <div id="header-placeholder"></div>
 
+  <!-- Evergage Script -->
+  <script type="text/javascript" src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
+
+  <!-- ALWAYS INIT DATALAYER AT TOP -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+</head>
+
+<body>
+
+  <div id="header-placeholder"></div>
 
   <section class="contact-section">
     <div class="container">
@@ -22,34 +31,37 @@
       </div>
 
       <div class="contact-container">
-       
+
+        <!-- LEFT: CONTACT FORM -->
         <div class="contact-form-section">
           <h2>Send us a Message</h2>
-          
+
           <div id="contactMessage" class="contact-message" style="display: none;"></div>
-          
+
           <form id="contactForm" class="contact-form">
+            
             <div class="form-row">
               <div class="form-group">
                 <label for="firstName">First Name *</label>
                 <input type="text" id="firstName" required>
               </div>
+
               <div class="form-group">
                 <label for="lastName">Last Name *</label>
                 <input type="text" id="lastName" required>
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="contactEmail">Email Address *</label>
               <input type="email" id="contactEmail" required>
             </div>
-            
+
             <div class="form-group">
               <label for="phone">Phone Number</label>
               <input type="tel" id="phone">
             </div>
-            
+
             <div class="form-group">
               <label for="subject">Subject *</label>
               <select id="subject" required>
@@ -62,62 +74,57 @@
                 <option value="suggestion">Suggestion</option>
               </select>
             </div>
-            
+
             <div class="form-group">
               <label for="message">Message *</label>
               <textarea id="message" rows="5" required placeholder="Please describe your inquiry in detail..."></textarea>
             </div>
-            
+
             <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+
           </form>
         </div>
 
-   
+        <!-- RIGHT: CONTACT INFO -->
         <div class="contact-info-section">
           <h2>Get in Touch</h2>
-          
+
           <div class="contact-info">
+
             <div class="contact-item">
-              <div class="contact-icon">
-                <i class="fas fa-map-marker-alt"></i>
-              </div>
+              <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
               <div class="contact-details">
                 <h3>Address</h3>
-                <p>131,Jagatpura<br>Jaipur District<br> Rajasthan 302028</p>
+                <p>131, Jagatpura<br>Jaipur, Rajasthan 302028</p>
               </div>
             </div>
-            
+
             <div class="contact-item">
-              <div class="contact-icon">
-                <i class="fas fa-phone"></i>
-              </div>
+              <div class="contact-icon"><i class="fas fa-phone"></i></div>
               <div class="contact-details">
                 <h3>Phone</h3>
                 <p>+91 98765 43210<br>+91 87654 32109</p>
               </div>
             </div>
-            
+
             <div class="contact-item">
-              <div class="contact-icon">
-                <i class="fas fa-envelope"></i>
-              </div>
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
               <div class="contact-details">
                 <h3>Email</h3>
                 <p>support@styler.com<br>orders@styler.com</p>
               </div>
             </div>
-            
+
             <div class="contact-item">
-              <div class="contact-icon">
-                <i class="fas fa-clock"></i>
-              </div>
+              <div class="contact-icon"><i class="fas fa-clock"></i></div>
               <div class="contact-details">
                 <h3>Business Hours</h3>
-                <p>Monday - Saturday: 9:00 AM - 8:00 PM<br>Sunday: 10:00 AM - 6:00 PM</p>
+                <p>Mon–Sat: 9:00 AM - 8:00 PM<br>Sun: 10:00 AM - 6:00 PM</p>
               </div>
             </div>
+
           </div>
-          
+
           <div class="social-links">
             <h3>Follow Us</h3>
             <div class="social-icons">
@@ -127,31 +134,36 @@
               <a href="#" class="social-link linkedin"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
+
         </div>
+
       </div>
     </div>
   </section>
 
- 
+  <!-- FAQ SECTION -->
   <section class="faq-section">
     <div class="container">
       <h2>Frequently Asked Questions</h2>
       <div class="faq-grid">
         <div class="faq-item">
           <h4>How can I check my order status?</h4>
-          <p>You can check your order status by visiting the "My Orders" page after logging in to your account.</p>
+          <p>You can check your order status under "My Orders" after logging in.</p>
         </div>
+
         <div class="faq-item">
           <h4>What is your return policy?</h4>
-          <p>We offer a 30-day return policy for unused items in original packaging. Please contact us to initiate a return.</p>
+          <p>30-day return policy for unused items with original packaging.</p>
         </div>
+
         <div class="faq-item">
           <h4>Do you offer free shipping?</h4>
-          <p>Yes! We offer free shipping on orders over ₹1,500. Standard shipping charges apply for smaller orders.</p>
+          <p>Yes, on orders above ₹1,500.</p>
         </div>
+
         <div class="faq-item">
           <h4>How can I change or cancel my order?</h4>
-          <p>You can modify or cancel your order within 1 hour of placement by contacting our support team.</p>
+          <p>Contact support within 1 hour of placing your order.</p>
         </div>
       </div>
     </div>
@@ -159,92 +171,69 @@
 
   <div id="footer-placeholder"></div>
 
- 
+  <!-- Scripts -->
   <script src="/sript.js"></script>
   <script src="/header.js"></script>
   <script src="/footer.js"></script>
+
+  <!-- ★★ FINAL MCP CONTACT FORM TRACKING SCRIPT ★★ -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('contactForm').addEventListener('submit', handleContactForm);
-    });
+  window.dataLayer = window.dataLayer || [];
 
-    function handleContactForm(e) {
-      e.preventDefault();
-      
-      const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('contactEmail').value,
-        phone: document.getElementById('phone').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value,
-        timestamp: new Date().toISOString(),
-        id: 'CONTACT-' + Date.now()
-      };
-      
-    
-      const contacts = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-      contacts.push(formData);
-      localStorage.setItem('contactMessages', JSON.stringify(contacts));
-      
-      showContactMessage('Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
-      document.getElementById('contactForm').reset();
+  document.addEventListener("DOMContentLoaded", function () {
 
-      window.dataLayer.push({
-  event: "MCP",
-  MCP: {
-    pageType: "ContactFormSubmit",
-    pageName: "Contact Form Submission",
-    form: {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      phone: formData.phone,
-      subject: formData.subject,
-      message: formData.message
-    },
-    userIdentities: {
-      emailAddress: formData.email
-    }
-  }
-});
+      document.getElementById("contactForm").addEventListener("submit", function (e) {
+          e.preventDefault();
 
-console.log("📩 MCP Form Submission Event Sent:", formData);
+          const formData = {
+              firstName: document.getElementById("firstName").value,
+              lastName: document.getElementById("lastName").value,
+              email: document.getElementById("contactEmail").value,
+              phone: document.getElementById("phone").value,
+              subject: document.getElementById("subject").value,
+              message: document.getElementById("message").value,
+              timestamp: new Date().toISOString(),
+              id: "CONTACT-" + Date.now()
+          };
 
-    }
+          /** SAVE LOCALLY **/
+          const contacts = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+          contacts.push(formData);
+          localStorage.setItem('contactMessages', JSON.stringify(contacts));
 
-    function showContactMessage(message, type) {
-      const messageDiv = document.getElementById('contactMessage');
+          /** MCP EVENT PUSH **/
+          window.dataLayer.push({
+              event: "MCP",
+              MCP: {
+                  pageType: "ContactFormSubmit",
+                  pageName: "Contact Form Submission",
+                  form: formData,
+                  userIdentities: { emailAddress: formData.email }
+              }
+          });
+
+          console.log("📩 MCP Form Submission Event Sent:", formData);
+
+          /** SHOW SUCCESS **/
+          showContactMessage("Thank you for your message! We'll get back to you within 24 hours.", "success");
+
+          /** RESET FORM **/
+          document.getElementById("contactForm").reset();
+      });
+
+  });
+
+  function showContactMessage(message, type) {
+      const messageDiv = document.getElementById("contactMessage");
       messageDiv.textContent = message;
       messageDiv.className = `contact-message ${type}`;
-      messageDiv.style.display = 'block';
-      
-     
+      messageDiv.style.display = "block";
+
       setTimeout(() => {
-        messageDiv.style.display = 'none';
+          messageDiv.style.display = "none";
       }, 5000);
-    }
-
-    window.dataLayer = window.dataLayer || [];
-
-document.getElementById("contactForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const formData = {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        email: document.getElementById("contactEmail").value,
-        phone: document.getElementById("phone").value,
-        subject: document.getElementById("subject").value,
-        message: document.getElementById("message").value,
-        timestamp: new Date().toISOString(),
-        id: "CONTACT-" + Date.now()
-    };
-    console.log("📩 MCP Contact Form Event Sent:", formData);
-
-    // keep your localStorage logic
-});
-
+  }
   </script>
+
 </body>
 </html>
