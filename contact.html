@@ -202,25 +202,42 @@
         messageDiv.style.display = 'none';
       }, 5000);
     }
-  </script>
-  <script>
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({
-  MCP: {
-    pageType: 'Content Page',
-    pageName: 'contact'
-  }
-});
-</script>
 
-<script>
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({
-  MCP: {
-    pageType: 'Content Page',
-    pageName: 'Contact'
-  }
+    window.dataLayer = window.dataLayer || [];
+
+document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("contactEmail").value,
+        phone: document.getElementById("phone").value,
+        subject: document.getElementById("subject").value,
+        message: document.getElementById("message").value,
+        timestamp: new Date().toISOString(),
+        id: "CONTACT-" + Date.now()
+    };
+
+    window.dataLayer.push({
+        event: "MCP",
+        MCP: {
+            pageType: "ContactFormSubmit",
+            pageName: "Contact Form Submitted",
+
+            userIdentities: {
+                emailAddress: formData.email
+            },
+
+            form: formData
+        }
+    });
+
+    console.log("📩 MCP Contact Form Event Sent:", formData);
+
+    // keep your localStorage logic
 });
-</script>
+
+  </script>
 </body>
 </html>
