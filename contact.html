@@ -189,6 +189,28 @@
       
       showContactMessage('Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
       document.getElementById('contactForm').reset();
+
+      window.dataLayer.push({
+  event: "MCP",
+  MCP: {
+    pageType: "ContactFormSubmit",
+    pageName: "Contact Form Submission",
+    form: {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message
+    },
+    userIdentities: {
+      emailAddress: formData.email
+    }
+  }
+});
+
+console.log("📩 MCP Form Submission Event Sent:", formData);
+
     }
 
     function showContactMessage(message, type) {
@@ -218,21 +240,6 @@ document.getElementById("contactForm").addEventListener("submit", function (e) {
         timestamp: new Date().toISOString(),
         id: "CONTACT-" + Date.now()
     };
-
-    window.dataLayer.push({
-        event: "MCP",
-        MCP: {
-            pageType: "ContactFormSubmit",
-            pageName: "Contact Form Submitted",
-
-            userIdentities: {
-                emailAddress: formData.email
-            },
-
-            form: formData
-        }
-    });
-
     console.log("📩 MCP Contact Form Event Sent:", formData);
 
     // keep your localStorage logic
