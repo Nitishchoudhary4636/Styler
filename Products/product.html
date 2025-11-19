@@ -1,101 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Details - Styler</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Product Details - Styler</title>
 
-    <!-- ALWAYS FIRST -->
-    <script>
-        window.dataLayer = window.dataLayer || [];
-    </script>
+  <!-- ALWAYS FIRST -->
+  <script>window.dataLayer = window.dataLayer || [];</script>
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23e74c3c' d='M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8H376c7.6 0 14.8 3.7 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-6.2 6.9-17.1 6.9-23.3 0l-232-256c-7.6-8.5-8.3-21.2-1.5-30.4l112-152zm154.3 8.2c-6.2 0-11.3 5.1-11.3 11.3v60.5c0 6.2 5.1 11.3 11.3 11.3s11.3-5.1 11.3-11.3V53.3c0-6.2-5.1-11.3-11.3-11.3z'/%3E%3C/svg%3E">
-
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-    <!-- IMPORTANT: Evergage loads AFTER sript.js -->
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
-
 <body>
+  <div id="header-placeholder"></div>
 
-    <div id="header-placeholder"></div>
+  <section class="breadcrumb">
+    <div class="container">
+      <nav class="breadcrumb-nav">
+        <a href="/index.html">Home</a>
+        <span>/</span>
+        <span id="categoryBreadcrumb">Products</span>
+        <span>/</span>
+        <span id="productBreadcrumb">Product Details</span>
+      </nav>
+    </div>
+  </section>
 
-    <section class="breadcrumb">
-        <div class="container">
-            <nav class="breadcrumb-nav">
-                <a href="/index.html">Home</a>
-                <span>/</span>
-                <span id="categoryBreadcrumb">Products</span>
-                <span>/</span>
-                <span id="productBreadcrumb">Product Details</span>
-            </nav>
-        </div>
-    </section>
+  <section class="product-detail-section">
+    <div class="container">
+      <div id="productDetail" class="product-detail-container"></div>
+    </div>
+  </section>
 
-    <section class="product-detail-section">
-        <div class="container">
-            <div id="productDetail" class="product-detail-container"></div>
-        </div>
-    </section>
+  <section class="related-products">
+    <div class="container">
+      <h3>You May Also Like</h3>
+      <div id="relatedProducts" class="products-grid"></div>
+    </div>
+  </section>
 
-    <section class="related-products">
-        <div class="container">
-            <h3>You May Also Like</h3>
-            <div id="relatedProducts" class="products-grid"></div>
-        </div>
-    </section>
+  <div id="footer-placeholder"></div>
 
-    <div id="footer-placeholder"></div>
+  <!-- 1) Load the app script that defines products, pushMCPProductView(), loadProductDetail() etc. -->
+  <script src="/sript.js"></script>
 
-    <!-- LOAD YOUR MAIN SCRIPT FIRST -->
-    <script src="/sript.js"></script>
+  <!-- 2) Load header/footer/cart (they rely on functions in sript.js) -->
+  <script src="/header.js"></script>
+  <script src="/footer.js"></script>
+  <script src="/cart-manager.js"></script>
 
-    <!-- Load header/footer/cart -->
-    <script src="/header.js"></script>
-    <script src="/footer.js"></script>
-    <script src="/cart-manager.js"></script>
+  <!-- 3) Immediately render PDP, related products, then PUSH PDP MCP event synchronously.
+          This ensures the datalayer contains the product before we load Evergage/sitemap. -->
+  <script>
+    (function () {
+      // load UI from sript.js
+      try {
+        loadProductDetail();       // renders PDP HTML, sets selects (color/size) etc.
+      } catch (e) {
+        console.error("loadProductDetail() failed:", e);
+      }
 
-    <!-- CALL PRODUCT VIEW + DETAIL LOAD AFTER sript.js -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+      try {
+        loadRelatedProducts();     // renders related products grid
+      } catch (e) {
+        console.error("loadRelatedProducts() failed:", e);
+      }
 
-            loadProductDetail();
-            loadRelatedProducts();
+      // Immediately push PDP MCP event if product exists
+      try {
+        // pushMCPProductView should check for a valid product internally.
+        // If not present, it should return without pushing — that's expected.
+        pushMCPProductView();
+        console.log("🔁 pushMCPProductView() executed before loading MCP/sitemap.");
+      } catch (e) {
+        console.error("pushMCPProductView() failed:", e);
+      }
+    })();
+  </script>
 
-            // Push product to DL BEFORE MCP Sitemap loads
-            setTimeout(function () {
-                pushMCPProductView();
-            }, 10);
-        });
+  <!-- 4) Now load Evergage and your sitemap (these will read the dataLayer entry we just pushed) -->
+  <script type="text/javascript" src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
+  <script src="/MCP/sitemap.js"></script>
 
-        function loadRelatedProducts() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var currentProductId = parseInt(urlParams.get("id"));
-            var currentProduct = products.find(function (p) { return p.id === currentProductId; });
-
-            if (!currentProduct) return;
-
-            var relatedProducts = products
-                .filter(function (p) { return p.category === currentProduct.category && p.id !== currentProductId; })
-                .slice(0, 3);
-
-            var container = document.getElementById("relatedProducts");
-
-            if (relatedProducts.length > 0) {
-                container.innerHTML = relatedProducts.map(function (product) {
-                    return productCardHtml(product);
-                }).join("");
-            } else {
-                container.innerHTML = "<p>No related products found.</p>";
-            }
-        }
-    </script>
-
-    <!-- MCP SITEMAP MUST LOAD LAST -->
-    <script src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
-    <script src="/MCP/sitemap.js"></script>
-
+  <!-- 5) Extra: if you still want to fire something after DOM is fully parsed -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // nothing required here for MCP flow — left intentionally empty.
+      // But keep any post-DOM UI wiring here if needed.
+    });
+  </script>
 </body>
 </html>
