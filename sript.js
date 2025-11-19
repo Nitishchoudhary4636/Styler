@@ -860,7 +860,6 @@ function loadProductDetail() {
     return;
   }
 
-  pushMCPProductView();
 
   const container = document.getElementById("productDetail");
   if (!container) return;
