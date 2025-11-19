@@ -860,6 +860,8 @@ function loadProductDetail() {
     return;
   }
 
+  pushMCPProductView();
+
   const container = document.getElementById("productDetail");
   if (!container) return;
 
@@ -1021,11 +1023,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (window.location.pathname.includes('index.html')) {
     sessionStorage.removeItem('searchTerm');
-  }
-
-  // If on a product page, push the product view to the dataLayer immediately.
-  if (window.location.pathname.includes('product.html')) {
-    pushMCPProductView();
   }
 });
 
