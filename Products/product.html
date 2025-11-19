@@ -11,9 +11,11 @@
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
+
 <body>
   <div id="header-placeholder"></div>
 
+  <!-- Breadcrumb -->
   <section class="breadcrumb">
     <div class="container">
       <nav class="breadcrumb-nav">
@@ -26,12 +28,14 @@
     </div>
   </section>
 
+  <!-- Product Detail -->
   <section class="product-detail-section">
     <div class="container">
       <div id="productDetail" class="product-detail-container"></div>
     </div>
   </section>
 
+  <!-- Related Products -->
   <section class="related-products">
     <div class="container">
       <h3>You May Also Like</h3>
@@ -41,53 +45,47 @@
 
   <div id="footer-placeholder"></div>
 
-  <!-- 1) Load the app script that defines products, pushMCPProductView(), loadProductDetail() etc. -->
+  <!-- MAIN APP FILE -->
   <script src="/sript.js"></script>
 
-  <!-- 2) Load header/footer/cart (they rely on functions in sript.js) -->
+  <!-- LAYOUT FILES -->
   <script src="/header.js"></script>
   <script src="/footer.js"></script>
   <script src="/cart-manager.js"></script>
 
-  <!-- 3) Immediately render PDP, related products, then PUSH PDP MCP event synchronously.
-          This ensures the datalayer contains the product before we load Evergage/sitemap. -->
+  <!-- INITIALIZE PDP + MCP BEFORE SITEMAP -->
   <script>
     (function () {
-      // load UI from sript.js
       try {
-        loadProductDetail();       // renders PDP HTML, sets selects (color/size) etc.
+        loadProductDetail();
       } catch (e) {
         console.error("loadProductDetail() failed:", e);
       }
 
       try {
-        loadRelatedProducts();     // renders related products grid
+        loadRelatedProducts();
       } catch (e) {
         console.error("loadRelatedProducts() failed:", e);
       }
 
-      // Immediately push PDP MCP event if product exists
       try {
-        // pushMCPProductView should check for a valid product internally.
-        // If not present, it should return without pushing — that's expected.
         pushMCPProductView();
-        console.log("🔁 pushMCPProductView() executed before loading MCP/sitemap.");
+        console.log("📌 MCP PDP Event pushed BEFORE sitemap.");
       } catch (e) {
         console.error("pushMCPProductView() failed:", e);
       }
     })();
   </script>
 
-  <!-- 4) Now load Evergage and your sitemap (these will read the dataLayer entry we just pushed) -->
-  <script type="text/javascript" src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
+  <!-- MCP SDK + SITEMAP -->
+  <script src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
   <script src="/MCP/sitemap.js"></script>
 
-  <!-- 5) Extra: if you still want to fire something after DOM is fully parsed -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // nothing required here for MCP flow — left intentionally empty.
-      // But keep any post-DOM UI wiring here if needed.
+      // EMPTY – no MCP code required here
     });
   </script>
+
 </body>
 </html>
