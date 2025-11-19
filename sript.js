@@ -47,6 +47,28 @@ function pushMCPCartView() {
   console.log("🛒 Cart MCP View pushed");
 }
 
+function pushMCPCheckoutView() {
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+  window.dataLayer.push({
+    event: 'begin_checkout',
+    ecommerce: {
+      checkout: {
+        products: cart.map(item => ({
+          id: String(item.id),
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          category: item.category,
+          variant: `${item.color} - ${item.size}`
+        }))
+      }
+    }
+  });
+
+  console.log("🚀 Checkout MCP View pushed");
+}
+
 function pushMCPProductView() {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = parseInt(urlParams.get("id"));
@@ -838,8 +860,6 @@ function loadProductDetail() {
     return;
   }
 
-  pushMCPProductView();
-
   const container = document.getElementById("productDetail");
   if (!container) return;
 
@@ -1001,6 +1021,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (window.location.pathname.includes('index.html')) {
     sessionStorage.removeItem('searchTerm');
+  }
+
+  // If on a product page, push the product view to the dataLayer immediately.
+  if (window.location.pathname.includes('product.html')) {
+    pushMCPProductView();
   }
 });
 

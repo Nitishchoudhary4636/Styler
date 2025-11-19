@@ -58,6 +58,7 @@ function renderAddress() {
 document.addEventListener('DOMContentLoaded', function() {
   renderCheckoutProduct();
   renderAddress();
+  pushMCPCheckoutView(); // Fire the checkout view event
   document.getElementById('addressForm').onsubmit = function(e) {
     e.preventDefault();
     const addr = {
