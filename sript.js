@@ -1144,3 +1144,8 @@ if (typeof module !== 'undefined' && module.exports) {
     loadProductDetail
   };
 }
+
+function loadRelatedProducts() {
+  console.log("loadRelatedProducts() called — no related products defined.");
+}
+
