@@ -1,4 +1,11 @@
 /**********************************************
+ * EMAIL VALIDATION (REQUIRED)
+ **********************************************/
+function isValidEmail(email) {
+    return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**********************************************
  * SEND INTERACTION EVENT (REQUIRED)
  **********************************************/
 function sendInteractionEvent(name, attributes) {
@@ -12,6 +19,9 @@ function sendInteractionEvent(name, attributes) {
     attributes: attributes || {}
   });
 }
+
+window.isValidEmail = isValidEmail;
+window.sendInteractionEvent = sendInteractionEvent;
 
 
 window.dataLayer = window.dataLayer || [];
