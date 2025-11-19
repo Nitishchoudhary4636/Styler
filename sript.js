@@ -1148,3 +1148,5 @@ function loadRelatedProducts() {
   console.log("loadRelatedProducts() called — no related products defined.");
 }
 
+window.isValidEmail = isValidEmail;
+window.sendInteractionEvent = sendInteractionEvent;
