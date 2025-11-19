@@ -1,3 +1,19 @@
+/**********************************************
+ * SEND INTERACTION EVENT (REQUIRED)
+ **********************************************/
+function sendInteractionEvent(name, attributes) {
+  SalesforceInteractions.sendEvent({
+    interaction: { name: name },
+    user: {
+      identities: {
+        emailAddress: localStorage.getItem("userEmail") || ""
+      }
+    },
+    attributes: attributes || {}
+  });
+}
+
+
 window.dataLayer = window.dataLayer || [];
 
 function pushMCPListView(category) {
