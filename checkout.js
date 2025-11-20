@@ -1,12 +1,4 @@
-
 let currentShippingAddress = null;
-
-// This should be defined in sript.js, but adding here as a fallback.
-const products = window.products || [];
-function formatCurrency(amount) {
-  const numAmount = parseFloat(amount) || 0;
-  return `₹${Math.round(numAmount).toLocaleString('en-IN')}`;
-}
 let allOrders = [];
 let filteredOrders = [];
 
@@ -243,49 +235,32 @@ function loadCartPage() {
         </div>
       </div>
     `;
-  }).join('');
-
-  const shipping = subtotal >= 1500 ? 0 : 59;
-  const tax = Math.round(subtotal * 0.18);
-  const total = subtotal + shipping + tax;
-
-  updateCartSummary(subtotal, shipping, tax, total);
-}
-
-function updateCartSummary(subtotal, shipping, tax, total) {
-  const elements = {
-    subtotal: document.getElementById('subtotal'),
-    shipping: document.getElementById('shipping'),
-    tax: document.getElementById('tax'),
-    total: document.getElementById('total')
-  };
-
-  if (elements.subtotal) elements.subtotal.textContent = formatCurrency(subtotal);
-  if (elements.shipping) elements.shipping.textContent = shipping === 0 ? 'FREE' : formatCurrency(shipping);
-  if (elements.tax) elements.tax.textContent = formatCurrency(tax);
-  if (elements.total) elements.total.textContent = formatCurrency(total);
-
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  if (checkoutBtn) {
-    checkoutBtn.disabled = total === 0;
-    checkoutBtn.textContent = total === 0 ? 'Cart is Empty' : `Proceed to Checkout - ${formatCurrency(total)}`;
+  } else {
+    document.getElementById('checkoutProductDisplay').innerHTML = '';
   }
 }
 
-function proceedToCheckout() {
-  const cart = getCart();
-  
-  if (cart.length === 0) {
-    showNotification('Your cart is empty', 'warning');
-    return;
-  }
-  
-  if (!isLoggedIn()) {
-    sessionStorage.setItem('returnUrl', 'checkout.html');
-    showNotification('Please login to proceed to checkout', 'warning');
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 1500);
+// Address logic
+function getAddress() {
+  return JSON.parse(localStorage.getItem('userAddress') || 'null');
+}
+function setAddress(addr) {
+  localStorage.setItem('userAddress', JSON.stringify(addr));
+}
+function showAddressForm() {
+  document.getElementById('addressForm').style.display = 'block';
+  document.getElementById('addressDisplay').style.display = 'none';
+}
+function hideAddressForm() {
+  document.getElementById('addressForm').style.display = 'none';
+  document.getElementById('addressDisplay').style.display = 'block';
+}
+function renderAddress() {
+  const addr = getAddress();
+  const display = document.getElementById('addressDisplay');
+  if (!addr) {
+    display.innerHTML = '<em>No address saved. Please enter your address.</em>';
+    showAddressForm();
     return;
   }
   
@@ -317,23 +292,16 @@ function closeShippingModal() {
   if (modal) modal.style.display = 'none';
 }
 
-function showAddressForm() {
-  document.getElementById('addressForm').style.display = 'block';
-  document.getElementById('addressDisplay').style.display = 'none';
-}
-
 function setupShippingForm() {
   const shippingForm = document.getElementById('shippingForm');
   if (!shippingForm) return;
   
   shippingForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const shippingAddress = {
+    const addr = {
       fullName: document.getElementById('fullName').value,
       phone: document.getElementById('phone').value,
       address: document.getElementById('address').value,
-      address2: document.getElementById('address2').value,
       city: document.getElementById('city').value,
       state: document.getElementById('state').value,
       pincode: document.getElementById('pincode').value,
@@ -352,150 +320,46 @@ function setupShippingForm() {
     
     closeShippingModal();
     showPaymentModal(shippingAddress);
-
-    // If on checkout page, update display and hide form
-    if (window.location.pathname.includes('checkout.html')) {
-      displayAddress(shippingAddress);
-    }
   });
 }
-
-function showPaymentModal(shippingAddress) {
+function formatCurrency(amount) {
+  return '₹' + Math.round(amount).toLocaleString('en-IN');
+}
+function renderOrderSummary() {
   const cart = getCart();
-  
-  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shipping = subtotal >= 1500 ? 0 : 59;
+  const itemsDiv = document.getElementById('orderItems');
+  let subtotal = 0;
+  itemsDiv.innerHTML = cart.map(item => {
+    subtotal += item.price * item.quantity;
+    return `<div class="order-item"><img src="${item.image}" alt="${item.name}"><div><div>${item.name}</div><div>Qty: ${item.quantity}</div><div>${formatCurrency(item.price * item.quantity)}</div></div></div>`;
+  }).join('');
+  let shipping = document.querySelector('input[name="shipping"]:checked').value === 'express' ? 129 : 59;
+  if (subtotal >= 1500) shipping = 0;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
-  
-  const paymentModalHtml = `
-    <div id="paymentModal" class="modal" style="display: flex;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2><i class="fas fa-credit-card"></i> Payment Confirmation</h2>
-        </div>
-        <div class="modal-body">
-          <div class="payment-summary">
-            <h3>Order Summary</h3>
-            <div class="summary-row">
-              <span>Subtotal:</span>
-              <span>${formatCurrency(subtotal)}</span>
-            </div>
-            <div class="summary-row">
-              <span>Shipping:</span>
-              <span>${formatCurrency(shipping)}</span>
-            </div>
-            <div class="summary-row">
-              <span>Tax (18%):</span>
-              <span>${formatCurrency(tax)}</span>
-            </div>
-            <div class="summary-row total-row">
-              <span><strong>Total Amount:</strong></span>
-              <span><strong>${formatCurrency(total)}</strong></span>
-            </div>
-          </div>
-          
-          <div class="payment-method">
-            <h4>Payment Method</h4>
-            <p><i class="fas fa-money-bill-wave"></i> Cash on Delivery</p>
-            <p class="payment-note">You will pay ${formatCurrency(total)} when your order is delivered.</p>
-          </div>
-          
-          <div class="shipping-info">
-            <h4>Delivery Address</h4>
-            <p><strong>${shippingAddress.fullName}</strong></p>
-            <p>${shippingAddress.address}</p>
-            ${shippingAddress.address2 ? `<p>${shippingAddress.address2}</p>` : ''}
-            <p>${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.pincode}</p>
-            <p><i class="fas fa-phone"></i> ${shippingAddress.phone}</p>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="closePaymentModal()">
-            <i class="fas fa-arrow-left"></i> Back to Cart
-          </button>
-          <button type="button" class="btn btn-primary btn-large" onclick="processPayment()">
-            <i class="fas fa-credit-card"></i> Pay ${formatCurrency(total)}
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  const existingModal = document.getElementById('paymentModal');
-  if (existingModal) {
-    existingModal.remove();
-  }
-  
-  document.body.insertAdjacentHTML('beforeend', paymentModalHtml);
-  
-  window.currentPaymentData = { shippingAddress, subtotal, shipping, tax, total };
+  document.getElementById('orderTotal').textContent = formatCurrency(total);
+  document.getElementById('freeDeliveryMsg').textContent = subtotal >= 1500 ? 'You have FREE DELIVERY!' : `You're ${formatCurrency(1500 - subtotal)} away from FREE DELIVERY`;
 }
+document.addEventListener('DOMContentLoaded', function() {
+  renderOrderSummary();
+  document.querySelectorAll('input[name="shipping"]').forEach(el => {
+    el.addEventListener('change', renderOrderSummary);
+  });
+});
 
-function closePaymentModal() {
-  const modal = document.getElementById('paymentModal');
-  if (modal) {
-    modal.remove();
-  }
-  window.currentPaymentData = null;
-}
-
-function processPayment() {
-  if (!window.currentPaymentData) {
-    showNotification('Payment data not found', 'error');
+// Place order logic
+async function placeOrder() {
+  const addr = getAddress();
+  if (!addr) {
+    alert('Please enter your delivery address.');
+    showAddressForm();
     return;
   }
-  
-  const { shippingAddress, subtotal, shipping, tax, total } = window.currentPaymentData;
-  
-  const payButton = document.querySelector('#paymentModal .btn-primary');
-  if (payButton) {
-    payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
-    payButton.disabled = true;
-  }
-  
-  setTimeout(() => {
-    showThankYouMessage();
-    
-    setTimeout(() => {
-      completeCheckout(shippingAddress, subtotal, shipping, tax, total);
-    }, 2500);
-  }, 1500);
-}
 
-function showThankYouMessage() {
-  closePaymentModal();
-  
-  const thankYouModalHtml = `
-    <div id="thankYouModal" class="modal" style="display: flex;">
-      <div class="modal-content thank-you-modal">
-        <div class="modal-body">
-          <div class="thank-you-content">
-            <div class="thank-you-icon">
-              <i class="fas fa-check-circle"></i>
-            </div>
-            <h2>Thank You!</h2>
-            <p>Your payment has been processed successfully.</p>
-            <p>Your order is being placed...</p>
-            <div class="loading-spinner">
-              <i class="fas fa-spinner fa-spin"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  document.body.insertAdjacentHTML('beforeend', thankYouModalHtml);
-}
-
-async function completeCheckout(shippingAddress, subtotal, shipping, tax, total) {
   const cart = getCart();
-  const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  
-  if (!currentUserData.id) {
-    showNotification('Please login to place order', 'error');
-    window.location.href = 'login.html';
+  if (!cart.length) {
+    alert('Your cart is empty.');
+    window.location.href = 'cart.html';
     return;
   }
   
@@ -534,7 +398,6 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     // Also save to localStorage as backup
     const localOrder = {
       id: 'ORD-' + Date.now(), // Removed savedOrder.id
-      trackingNumber: 'ST' + Math.floor(Math.random() * 900000 + 100000),
       userId: currentUserData.email,
       items: cart.map(item => ({
         name: item.name,
@@ -652,100 +515,6 @@ function renderOrders() {
     .map(order => createOrderHTML(order))
     .join('');
 }
-
-function placeOrder() {
-  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
-  if (!paymentMethod) {
-    showNotification('Please select a payment method.', 'warning');
-    return;
-  }
-
-  if (!currentShippingAddress) {
-    showNotification('Please save a shipping address.', 'warning');
-    return;
-  }
-
-  showPaymentModal(currentShippingAddress);
-}
-
-function displayAddress(address) {
-  const addressDisplay = document.getElementById('addressDisplay');
-  const addressForm = document.getElementById('addressForm');
-  if (!addressDisplay || !addressForm) return;
-
-  if (address) {
-    addressDisplay.innerHTML = `
-      <p><strong>${address.fullName}</strong></p>
-      <p>${address.address}</p>
-      <p>${address.city}, ${address.state} - ${address.pincode}</p>
-      <p>Phone: ${address.phone}</p>
-    `;
-    addressDisplay.style.display = 'block';
-    addressForm.style.display = 'none';
-    currentShippingAddress = address;
-  } else {
-    showAddressForm();
-  }
-}
-
-function setupCheckoutPage() {
-  // 1. Load Address
-  const savedAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
-  if (savedAddress) {
-    // Populate form fields
-    document.getElementById('fullName').value = savedAddress.fullName || '';
-    document.getElementById('phone').value = savedAddress.phone || '';
-    document.getElementById('address').value = savedAddress.address || '';
-    document.getElementById('city').value = savedAddress.city || '';
-    document.getElementById('state').value = savedAddress.state || '';
-    document.getElementById('pincode').value = savedAddress.pincode || '';
-    displayAddress(savedAddress);
-  } else {
-    showAddressForm();
-  }
-
-  // 2. Setup Address Form Submission
-  const addressForm = document.getElementById('addressForm');
-  if (addressForm) {
-    addressForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newAddress = {
-        fullName: document.getElementById('fullName').value,
-        phone: document.getElementById('phone').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        state: document.getElementById('state').value,
-        pincode: document.getElementById('pincode').value,
-      };
-      localStorage.setItem('userAddress', JSON.stringify(newAddress));
-      displayAddress(newAddress);
-      showNotification('Address saved!', 'success');
-    });
-  }
-
-  // 3. Load Order Summary
-  const cart = getCart();
-  const orderItemsContainer = document.getElementById('orderItems');
-  const orderTotalEl = document.getElementById('orderTotal');
-  const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
-
-  if (orderItemsContainer && orderTotalEl) {
-    let subtotal = 0;
-    orderItemsContainer.innerHTML = cart.map(item => {
-      subtotal += item.price * item.quantity;
-      return `<div class="summary-item"><span>${item.name} (x${item.quantity})</span> <span>${formatCurrency(item.price * item.quantity)}</span></div>`;
-    }).join('');
-
-    const shipping = subtotal >= 1500 ? 0 : 59;
-    const total = subtotal + shipping;
-    orderTotalEl.textContent = formatCurrency(total);
-
-    if (freeDeliveryMsg) {
-        freeDeliveryMsg.textContent = shipping === 0 ? 'You qualify for FREE delivery!' : '';
-    }
-  }
-}
-
 
 function createOrderHTML(order) {
   const orderDate = new Date(order.orderDate).toLocaleDateString();
@@ -1036,12 +805,6 @@ document.addEventListener('click', function(e) {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  if (window.location.pathname.includes('checkout.html')) {
-    setupCheckoutPage();
-  }
-});
-
 // Make functions globally available
 window.addToCartWithVariant = addToCartWithVariant;
 window.updateCartQuantity = updateCartQuantity;
@@ -1062,5 +825,3 @@ window.downloadInvoice = downloadInvoice;
 window.searchOrders = searchOrders;
 window.filterOrders = filterOrders;
 window.clearOrderFilters = clearOrderFilters;
-window.showAddressForm = showAddressForm;
-window.placeOrder = placeOrder;

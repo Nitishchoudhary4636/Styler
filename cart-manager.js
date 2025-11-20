@@ -514,7 +514,7 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     // const savedOrder = await ApiService.createOrder(orderData);
     
     // Also save to localStorage as backup
-      const localOrder = {
+    const localOrder = {
       id: 'ORD-' + Date.now(), // Removed savedOrder.id
       userId: currentUserData.email,
       items: cart.map(item => ({
@@ -554,7 +554,6 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     setTimeout(() => {
       window.location.href = `orders.html?success=true&orderId=${localOrder.id}&total=${localOrder.total}`;
     }, 1500);
-
     
   } catch (error) {
     console.error('Order creation failed:', error);
