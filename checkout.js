@@ -1,237 +1,40 @@
+<<<<<<< HEAD
+
 let currentShippingAddress = null;
+
+// This should be defined in sript.js, but adding here as a fallback.
+const products = window.products || [];
+function formatCurrency(amount) {
+  const numAmount = parseFloat(amount) || 0;
+  return `₹${Math.round(numAmount).toLocaleString('en-IN')}`;
+}
 let allOrders = [];
 let filteredOrders = [];
+=======
+// checkout.js
+// Handles checkout page logic: product rendering, address, shipping, payment, order summary
+>>>>>>> parent of b619a43 (feat: Implement cart management and checkout process)
 
-function getCart() {
-  return JSON.parse(localStorage.getItem('cart') || '[]');
-}
-
-function saveCart(cart) {
-  localStorage.setItem('cart', JSON.stringify(cart));
-  updateCartCount();
-}
-
-function addToCartWithVariant(productId, color = null, size = null, quantity = 1) {
-  if (!isLoggedIn()) {
-    sessionStorage.setItem('returnUrl', window.location.href);
-    showNotification('Please login to add items to cart', 'warning');
-    setTimeout(() => {
-      window.location.href = 'login.html';
-    }, 1500);
-    return false;
+// Product summary rendering
+function renderCheckoutProduct() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productId = parseInt(urlParams.get('id'));
+  let products = window.products || [];
+  if (!products.length && localStorage.getItem('products')) {
+    products = JSON.parse(localStorage.getItem('products'));
   }
-
-  const product = products.find(p => p.id === productId);
-  if (!product) {
-    showNotification('Product not found', 'error');
-    return false;
+  let product = null;
+  if (productId) {
+    product = products.find(p => p.id === productId);
   }
-
-  if (color === null) {
-    const colorSelect = document.getElementById('colorSelect');
-    color = colorSelect ? colorSelect.value : getDefaultColor(product.category);
-  }
-  
-  if (size === null) {
-    const sizeSelect = document.getElementById('sizeSelect');
-    size = sizeSelect ? sizeSelect.value : getDefaultSize(product.category);
-  }
-
-  let cart = getCart();
-
-  const existingItemIndex = cart.findIndex(
-    item => item.id == productId && item.color === color && item.size === size
-  );
-
-  if (existingItemIndex > -1) {
-    const oldQuantity = cart[existingItemIndex].quantity;
-    cart[existingItemIndex].quantity += quantity;
-    const newQuantity = cart[existingItemIndex].quantity;
-    showNotification(`${product.name} quantity updated (${oldQuantity} → ${newQuantity})`, 'success');
-  } else {
-    cart.push({
-      id: productId,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      color: color,
-      size: size,
-      quantity: quantity,
-      category: product.category
-    });
-    showNotification(`${product.name} added to cart`, 'success');
-  }
-
-  saveCart(cart);
-  
-  setTimeout(() => {
-    window.location.href = 'cart.html';
-  }, 1500);
-  
-  return true;
-}
-
-function getDefaultColor(category) {
-  return category === 'bags' ? 'Black' : 'Black';
-}
-
-function getDefaultSize(category) {
-  return category === 'shoes' ? '9' : 'Medium';
-}
-
-function updateCartQuantity(productId, color, size, delta) {
-  let cart = getCart();
-  const itemIndex = cart.findIndex(i => 
-    i.id == productId && i.color === color && i.size === size
-  );
-  
-  if (itemIndex === -1) return;
-  
-  cart[itemIndex].quantity += delta;
-  
-  if (cart[itemIndex].quantity <= 0) {
-    cart.splice(itemIndex, 1);
-    showNotification('Item removed from cart', 'info');
-  } else {
-    showNotification('Cart updated', 'success');
-  }
-  
-  saveCart(cart);
-  
-  if (window.location.pathname.includes('cart.html')) {
-    loadCartPage();
-  }
-}
-
-function removeCartItem(productId, color, size) {
-  if (!confirm('Remove this item from cart?')) return;
-  
-  let cart = getCart();
-  const initialLength = cart.length;
-  
-  cart = cart.filter(i => !(
-    i.id == productId && i.color === color && i.size === size
-  ));
-  
-  if (cart.length < initialLength) {
-    saveCart(cart);
-    showNotification('Item removed from cart', 'info');
-  } else {
-    console.warn('Item not found for removal:', {productId, color, size});
-    showNotification('Item could not be removed', 'error');
-  }
-  
-  if (window.location.pathname.includes('cart.html')) {
-    loadCartPage();
-  }
-}
-
-function cleanupCart() {
-  let cart = getCart();
-  const originalLength = cart.length;
-  
-  cart = cart.filter(item => {
-    const hasValidId = item.id !== undefined && item.id !== null;
-    const hasValidPrice = !isNaN(parseFloat(item.price)) && parseFloat(item.price) > 0;
-    const hasValidQuantity = !isNaN(parseInt(item.quantity)) && parseInt(item.quantity) > 0;
-    const hasValidName = item.name && item.name.trim() !== '';
-    
-    return hasValidId && hasValidPrice && hasValidQuantity && hasValidName;
-  });
-  
-  if (cart.length < originalLength) {
-    saveCart(cart);
-    console.log(`Cleaned up ${originalLength - cart.length} invalid cart items`);
-    return true;
-  }
-  return false;
-}
-
-function updateCartCount() {
-  const cart = getCart();
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  
-  const cartCountElements = document.querySelectorAll('#cartCount');
-  cartCountElements.forEach(element => {
-    element.textContent = totalItems;
-  });
-}
-
-function loadCartPage() {
-  const cartContainer = document.getElementById('cartItems');
-  const emptyCart = document.getElementById('emptyCart');
-  if (!cartContainer) return;
-
-  cleanupCart();
-  
-  const cart = getCart();
-  
-  if (cart.length === 0) {
-    cartContainer.innerHTML = '';
-    if (emptyCart) emptyCart.style.display = 'block';
-    updateCartSummary(0, 0, 0, 0);
-    return;
-  }
-
-  if (emptyCart) emptyCart.style.display = 'none';
-
-  let subtotal = 0;
-  cartContainer.innerHTML = cart.map(item => {
-    const itemPrice = parseFloat(item.price) || 0;
-    const itemQuantity = parseInt(item.quantity) || 1;
-    const lineTotal = itemPrice * itemQuantity;
-    
-    if (isNaN(lineTotal) || itemPrice <= 0) {
-      console.warn('Invalid cart item found:', item);
-      return '';
-    }
-    
-    subtotal += lineTotal;
-    
-    return `
-      <div class="cart-item">
-        <div class="cart-item-image">
-          <img src="${item.image}" alt="${escapeHtml(item.name)}">
-        </div>
-        
-        <div class="cart-item-info">
-          <h4>${escapeHtml(item.name)}</h4>
-          <div class="cart-item-details">
-            <div class="item-variant">
-              <span class="variant-label">Color:</span>
-              <span class="variant-value">${item.color}</span>
-            </div>
-            <div class="item-variant">
-              <span class="variant-label">Size:</span>
-              <span class="variant-value">${item.size}</span>
-            </div>
-            <div class="item-price">
-              <span class="price">${formatCurrency(itemPrice)} each</span>
-            </div>
-          </div>
-          
-          <div class="quantity-controls">
-            <button class="quantity-btn minus" 
-                    onclick="updateCartQuantity(${item.id}, '${escapeHtml(item.color)}', '${escapeHtml(item.size)}', -1)"
-                    ${itemQuantity <= 1 ? 'disabled' : ''}>
-              <i class="fas fa-minus"></i>
-            </button>
-            <span class="quantity-display">${itemQuantity}</span>
-            <button class="quantity-btn plus" 
-                    onclick="updateCartQuantity(${item.id}, '${escapeHtml(item.color)}', '${escapeHtml(item.size)}', 1)">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-        </div>
-        
-        <div class="cart-item-actions">
-          <div class="item-total">
-            <strong>${formatCurrency(lineTotal)}</strong>
-          </div>
-          <button class="remove-btn" 
-                  onclick="removeCartItem(${item.id}, '${escapeHtml(item.color)}', '${escapeHtml(item.size)}')">
-            <i class="fas fa-trash"></i> Remove
-          </button>
+  if (product) {
+    document.getElementById('checkoutProductDisplay').innerHTML = `
+      <div class="checkout-product-card">
+        <img src="${product.image}" alt="${product.name}">
+        <div class="checkout-product-details">
+          <div class="checkout-product-title">${product.name}</div>
+          <div class="checkout-product-desc">${product.description}</div>
+          <div class="checkout-product-price">Price: ${formatCurrency(product.price)}</div>
         </div>
       </div>
     `;
@@ -263,9 +66,10 @@ function renderAddress() {
     showAddressForm();
     return;
   }
-  
-  showShippingModal();
+  display.innerHTML = `<strong>${addr.fullName}</strong><br>${addr.address}<br>${addr.city}, ${addr.state} - ${addr.pincode}<br>Phone: ${addr.phone}`;
+  hideAddressForm();
 }
+<<<<<<< HEAD
 
 function showShippingModal() {
   const modal = document.getElementById('shippingModal');
@@ -292,11 +96,22 @@ function closeShippingModal() {
   if (modal) modal.style.display = 'none';
 }
 
+function showAddressForm() {
+  document.getElementById('addressForm').style.display = 'block';
+  document.getElementById('addressDisplay').style.display = 'none';
+}
+
 function setupShippingForm() {
   const shippingForm = document.getElementById('shippingForm');
   if (!shippingForm) return;
   
   shippingForm.addEventListener('submit', function(e) {
+=======
+document.addEventListener('DOMContentLoaded', function() {
+  renderCheckoutProduct();
+  renderAddress();
+  document.getElementById('addressForm').onsubmit = function(e) {
+>>>>>>> parent of b619a43 (feat: Implement cart management and checkout process)
     e.preventDefault();
     const addr = {
       fullName: document.getElementById('fullName').value,
@@ -304,9 +119,9 @@ function setupShippingForm() {
       address: document.getElementById('address').value,
       city: document.getElementById('city').value,
       state: document.getElementById('state').value,
-      pincode: document.getElementById('pincode').value,
-      landmark: document.getElementById('landmark').value
+      pincode: document.getElementById('pincode').value
     };
+<<<<<<< HEAD
     
     if (!shippingAddress.fullName || !shippingAddress.phone || 
         !shippingAddress.address || !shippingAddress.city || 
@@ -320,46 +135,150 @@ function setupShippingForm() {
     
     closeShippingModal();
     showPaymentModal(shippingAddress);
+
+    // If on checkout page, update display and hide form
+    if (window.location.pathname.includes('checkout.html')) {
+      displayAddress(shippingAddress);
+    }
   });
 }
-function formatCurrency(amount) {
-  return '₹' + Math.round(amount).toLocaleString('en-IN');
-}
-function renderOrderSummary() {
+
+function showPaymentModal(shippingAddress) {
   const cart = getCart();
-  const itemsDiv = document.getElementById('orderItems');
-  let subtotal = 0;
-  itemsDiv.innerHTML = cart.map(item => {
-    subtotal += item.price * item.quantity;
-    return `<div class="order-item"><img src="${item.image}" alt="${item.name}"><div><div>${item.name}</div><div>Qty: ${item.quantity}</div><div>${formatCurrency(item.price * item.quantity)}</div></div></div>`;
-  }).join('');
-  let shipping = document.querySelector('input[name="shipping"]:checked').value === 'express' ? 129 : 59;
-  if (subtotal >= 1500) shipping = 0;
+  
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const shipping = subtotal >= 1500 ? 0 : 59;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + shipping + tax;
-  document.getElementById('orderTotal').textContent = formatCurrency(total);
-  document.getElementById('freeDeliveryMsg').textContent = subtotal >= 1500 ? 'You have FREE DELIVERY!' : `You're ${formatCurrency(1500 - subtotal)} away from FREE DELIVERY`;
+  
+  const paymentModalHtml = `
+    <div id="paymentModal" class="modal" style="display: flex;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2><i class="fas fa-credit-card"></i> Payment Confirmation</h2>
+        </div>
+        <div class="modal-body">
+          <div class="payment-summary">
+            <h3>Order Summary</h3>
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span>${formatCurrency(subtotal)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping:</span>
+              <span>${formatCurrency(shipping)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax (18%):</span>
+              <span>${formatCurrency(tax)}</span>
+            </div>
+            <div class="summary-row total-row">
+              <span><strong>Total Amount:</strong></span>
+              <span><strong>${formatCurrency(total)}</strong></span>
+            </div>
+          </div>
+          
+          <div class="payment-method">
+            <h4>Payment Method</h4>
+            <p><i class="fas fa-money-bill-wave"></i> Cash on Delivery</p>
+            <p class="payment-note">You will pay ${formatCurrency(total)} when your order is delivered.</p>
+          </div>
+          
+          <div class="shipping-info">
+            <h4>Delivery Address</h4>
+            <p><strong>${shippingAddress.fullName}</strong></p>
+            <p>${shippingAddress.address}</p>
+            ${shippingAddress.address2 ? `<p>${shippingAddress.address2}</p>` : ''}
+            <p>${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.pincode}</p>
+            <p><i class="fas fa-phone"></i> ${shippingAddress.phone}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closePaymentModal()">
+            <i class="fas fa-arrow-left"></i> Back to Cart
+          </button>
+          <button type="button" class="btn btn-primary btn-large" onclick="processPayment()">
+            <i class="fas fa-credit-card"></i> Pay ${formatCurrency(total)}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  const existingModal = document.getElementById('paymentModal');
+  if (existingModal) {
+    existingModal.remove();
+  }
+  
+  document.body.insertAdjacentHTML('beforeend', paymentModalHtml);
+  
+  window.currentPaymentData = { shippingAddress, subtotal, shipping, tax, total };
 }
-document.addEventListener('DOMContentLoaded', function() {
-  renderOrderSummary();
-  document.querySelectorAll('input[name="shipping"]').forEach(el => {
-    el.addEventListener('change', renderOrderSummary);
-  });
-});
 
-// Place order logic
-async function placeOrder() {
-  const addr = getAddress();
-  if (!addr) {
-    alert('Please enter your delivery address.');
-    showAddressForm();
+function closePaymentModal() {
+  const modal = document.getElementById('paymentModal');
+  if (modal) {
+    modal.remove();
+  }
+  window.currentPaymentData = null;
+}
+
+function processPayment() {
+  if (!window.currentPaymentData) {
+    showNotification('Payment data not found', 'error');
     return;
   }
+  
+  const { shippingAddress, subtotal, shipping, tax, total } = window.currentPaymentData;
+  
+  const payButton = document.querySelector('#paymentModal .btn-primary');
+  if (payButton) {
+    payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Payment...';
+    payButton.disabled = true;
+  }
+  
+  setTimeout(() => {
+    showThankYouMessage();
+    
+    setTimeout(() => {
+      completeCheckout(shippingAddress, subtotal, shipping, tax, total);
+    }, 2500);
+  }, 1500);
+}
 
+function showThankYouMessage() {
+  closePaymentModal();
+  
+  const thankYouModalHtml = `
+    <div id="thankYouModal" class="modal" style="display: flex;">
+      <div class="modal-content thank-you-modal">
+        <div class="modal-body">
+          <div class="thank-you-content">
+            <div class="thank-you-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Thank You!</h2>
+            <p>Your payment has been processed successfully.</p>
+            <p>Your order is being placed...</p>
+            <div class="loading-spinner">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.insertAdjacentHTML('beforeend', thankYouModalHtml);
+}
+
+async function completeCheckout(shippingAddress, subtotal, shipping, tax, total) {
   const cart = getCart();
-  if (!cart.length) {
-    alert('Your cart is empty.');
-    window.location.href = 'cart.html';
+  const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  
+  if (!currentUserData.id) {
+    showNotification('Please login to place order', 'error');
+    window.location.href = 'login.html';
     return;
   }
   
@@ -398,6 +317,7 @@ async function placeOrder() {
     // Also save to localStorage as backup
     const localOrder = {
       id: 'ORD-' + Date.now(), // Removed savedOrder.id
+      trackingNumber: 'ST' + Math.floor(Math.random() * 900000 + 100000),
       userId: currentUserData.email,
       items: cart.map(item => ({
         name: item.name,
@@ -515,6 +435,100 @@ function renderOrders() {
     .map(order => createOrderHTML(order))
     .join('');
 }
+
+function placeOrder() {
+  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
+  if (!paymentMethod) {
+    showNotification('Please select a payment method.', 'warning');
+    return;
+  }
+
+  if (!currentShippingAddress) {
+    showNotification('Please save a shipping address.', 'warning');
+    return;
+  }
+
+  showPaymentModal(currentShippingAddress);
+}
+
+function displayAddress(address) {
+  const addressDisplay = document.getElementById('addressDisplay');
+  const addressForm = document.getElementById('addressForm');
+  if (!addressDisplay || !addressForm) return;
+
+  if (address) {
+    addressDisplay.innerHTML = `
+      <p><strong>${address.fullName}</strong></p>
+      <p>${address.address}</p>
+      <p>${address.city}, ${address.state} - ${address.pincode}</p>
+      <p>Phone: ${address.phone}</p>
+    `;
+    addressDisplay.style.display = 'block';
+    addressForm.style.display = 'none';
+    currentShippingAddress = address;
+  } else {
+    showAddressForm();
+  }
+}
+
+function setupCheckoutPage() {
+  // 1. Load Address
+  const savedAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
+  if (savedAddress) {
+    // Populate form fields
+    document.getElementById('fullName').value = savedAddress.fullName || '';
+    document.getElementById('phone').value = savedAddress.phone || '';
+    document.getElementById('address').value = savedAddress.address || '';
+    document.getElementById('city').value = savedAddress.city || '';
+    document.getElementById('state').value = savedAddress.state || '';
+    document.getElementById('pincode').value = savedAddress.pincode || '';
+    displayAddress(savedAddress);
+  } else {
+    showAddressForm();
+  }
+
+  // 2. Setup Address Form Submission
+  const addressForm = document.getElementById('addressForm');
+  if (addressForm) {
+    addressForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newAddress = {
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        pincode: document.getElementById('pincode').value,
+      };
+      localStorage.setItem('userAddress', JSON.stringify(newAddress));
+      displayAddress(newAddress);
+      showNotification('Address saved!', 'success');
+    });
+  }
+
+  // 3. Load Order Summary
+  const cart = getCart();
+  const orderItemsContainer = document.getElementById('orderItems');
+  const orderTotalEl = document.getElementById('orderTotal');
+  const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
+
+  if (orderItemsContainer && orderTotalEl) {
+    let subtotal = 0;
+    orderItemsContainer.innerHTML = cart.map(item => {
+      subtotal += item.price * item.quantity;
+      return `<div class="summary-item"><span>${item.name} (x${item.quantity})</span> <span>${formatCurrency(item.price * item.quantity)}</span></div>`;
+    }).join('');
+
+    const shipping = subtotal >= 1500 ? 0 : 59;
+    const total = subtotal + shipping;
+    orderTotalEl.textContent = formatCurrency(total);
+
+    if (freeDeliveryMsg) {
+        freeDeliveryMsg.textContent = shipping === 0 ? 'You qualify for FREE delivery!' : '';
+    }
+  }
+}
+
 
 function createOrderHTML(order) {
   const orderDate = new Date(order.orderDate).toLocaleDateString();
@@ -805,6 +819,12 @@ document.addEventListener('click', function(e) {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.pathname.includes('checkout.html')) {
+    setupCheckoutPage();
+  }
+});
+
 // Make functions globally available
 window.addToCartWithVariant = addToCartWithVariant;
 window.updateCartQuantity = updateCartQuantity;
@@ -825,3 +845,81 @@ window.downloadInvoice = downloadInvoice;
 window.searchOrders = searchOrders;
 window.filterOrders = filterOrders;
 window.clearOrderFilters = clearOrderFilters;
+window.showAddressForm = showAddressForm;
+window.placeOrder = placeOrder;
+=======
+    setAddress(addr);
+    renderAddress();
+  };
+});
+
+// Shipping logic
+function getDeliveryDate(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('standardDeliveryDate').textContent = getDeliveryDate(3);
+  document.getElementById('expressDeliveryDate').textContent = getDeliveryDate(1);
+});
+
+// Order summary logic
+function getCart() {
+  return JSON.parse(localStorage.getItem('cart') || '[]');
+}
+function formatCurrency(amount) {
+  return '₹' + Math.round(amount).toLocaleString('en-IN');
+}
+function renderOrderSummary() {
+  const cart = getCart();
+  const itemsDiv = document.getElementById('orderItems');
+  let subtotal = 0;
+  itemsDiv.innerHTML = cart.map(item => {
+    subtotal += item.price * item.quantity;
+    return `<div class="order-item"><img src="${item.image}" alt="${item.name}"><div><div>${item.name}</div><div>Qty: ${item.quantity}</div><div>${formatCurrency(item.price * item.quantity)}</div></div></div>`;
+  }).join('');
+  let shipping = document.querySelector('input[name="shipping"]:checked').value === 'express' ? 129 : 59;
+  if (subtotal >= 1500) shipping = 0;
+  const tax = Math.round(subtotal * 0.18);
+  const total = subtotal + shipping + tax;
+  document.getElementById('orderTotal').textContent = formatCurrency(total);
+  document.getElementById('freeDeliveryMsg').textContent = subtotal >= 1500 ? 'You have FREE DELIVERY!' : `You're ${formatCurrency(1500 - subtotal)} away from FREE DELIVERY`;
+}
+document.addEventListener('DOMContentLoaded', function() {
+  renderOrderSummary();
+  document.querySelectorAll('input[name="shipping"]').forEach(el => {
+    el.addEventListener('change', renderOrderSummary);
+  });
+});
+
+// Place order logic
+async function placeOrder() {
+  const addr = getAddress();
+  if (!addr) {
+    alert('Please enter your delivery address.');
+    showAddressForm();
+    return;
+  }
+
+  const cart = getCart();
+  if (!cart.length) {
+    alert('Your cart is empty.');
+    window.location.href = 'cart.html';
+    return;
+  }
+
+  // Calculate totals
+  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  let shipping = document.querySelector('input[name="shipping"]:checked').value === 'express' ? 129 : 59;
+  if (subtotal >= 1500) shipping = 0;
+  const tax = Math.round(subtotal * 0.18);
+  const total = subtotal + shipping + tax;
+
+  // Use the centralized completeCheckout function from cart-manager.js
+  await completeCheckout(addr, subtotal, shipping, tax, total);
+}
+
+window.placeOrder = placeOrder;
+window.showAddressForm = showAddressForm;
+>>>>>>> parent of b619a43 (feat: Implement cart management and checkout process)
