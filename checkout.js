@@ -1,5 +1,12 @@
 
 let currentShippingAddress = null;
+
+// This should be defined in sript.js, but adding here as a fallback.
+const products = window.products || [];
+function formatCurrency(amount) {
+  const numAmount = parseFloat(amount) || 0;
+  return `₹${Math.round(numAmount).toLocaleString('en-IN')}`;
+}
 let allOrders = [];
 let filteredOrders = [];
 
@@ -310,6 +317,11 @@ function closeShippingModal() {
   if (modal) modal.style.display = 'none';
 }
 
+function showAddressForm() {
+  document.getElementById('addressForm').style.display = 'block';
+  document.getElementById('addressDisplay').style.display = 'none';
+}
+
 function setupShippingForm() {
   const shippingForm = document.getElementById('shippingForm');
   if (!shippingForm) return;
@@ -340,6 +352,11 @@ function setupShippingForm() {
     
     closeShippingModal();
     showPaymentModal(shippingAddress);
+
+    // If on checkout page, update display and hide form
+    if (window.location.pathname.includes('checkout.html')) {
+      displayAddress(shippingAddress);
+    }
   });
 }
 
@@ -517,6 +534,7 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     // Also save to localStorage as backup
     const localOrder = {
       id: 'ORD-' + Date.now(), // Removed savedOrder.id
+      trackingNumber: 'ST' + Math.floor(Math.random() * 900000 + 100000),
       userId: currentUserData.email,
       items: cart.map(item => ({
         name: item.name,
@@ -634,6 +652,100 @@ function renderOrders() {
     .map(order => createOrderHTML(order))
     .join('');
 }
+
+function placeOrder() {
+  const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
+  if (!paymentMethod) {
+    showNotification('Please select a payment method.', 'warning');
+    return;
+  }
+
+  if (!currentShippingAddress) {
+    showNotification('Please save a shipping address.', 'warning');
+    return;
+  }
+
+  showPaymentModal(currentShippingAddress);
+}
+
+function displayAddress(address) {
+  const addressDisplay = document.getElementById('addressDisplay');
+  const addressForm = document.getElementById('addressForm');
+  if (!addressDisplay || !addressForm) return;
+
+  if (address) {
+    addressDisplay.innerHTML = `
+      <p><strong>${address.fullName}</strong></p>
+      <p>${address.address}</p>
+      <p>${address.city}, ${address.state} - ${address.pincode}</p>
+      <p>Phone: ${address.phone}</p>
+    `;
+    addressDisplay.style.display = 'block';
+    addressForm.style.display = 'none';
+    currentShippingAddress = address;
+  } else {
+    showAddressForm();
+  }
+}
+
+function setupCheckoutPage() {
+  // 1. Load Address
+  const savedAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
+  if (savedAddress) {
+    // Populate form fields
+    document.getElementById('fullName').value = savedAddress.fullName || '';
+    document.getElementById('phone').value = savedAddress.phone || '';
+    document.getElementById('address').value = savedAddress.address || '';
+    document.getElementById('city').value = savedAddress.city || '';
+    document.getElementById('state').value = savedAddress.state || '';
+    document.getElementById('pincode').value = savedAddress.pincode || '';
+    displayAddress(savedAddress);
+  } else {
+    showAddressForm();
+  }
+
+  // 2. Setup Address Form Submission
+  const addressForm = document.getElementById('addressForm');
+  if (addressForm) {
+    addressForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newAddress = {
+        fullName: document.getElementById('fullName').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        pincode: document.getElementById('pincode').value,
+      };
+      localStorage.setItem('userAddress', JSON.stringify(newAddress));
+      displayAddress(newAddress);
+      showNotification('Address saved!', 'success');
+    });
+  }
+
+  // 3. Load Order Summary
+  const cart = getCart();
+  const orderItemsContainer = document.getElementById('orderItems');
+  const orderTotalEl = document.getElementById('orderTotal');
+  const freeDeliveryMsg = document.getElementById('freeDeliveryMsg');
+
+  if (orderItemsContainer && orderTotalEl) {
+    let subtotal = 0;
+    orderItemsContainer.innerHTML = cart.map(item => {
+      subtotal += item.price * item.quantity;
+      return `<div class="summary-item"><span>${item.name} (x${item.quantity})</span> <span>${formatCurrency(item.price * item.quantity)}</span></div>`;
+    }).join('');
+
+    const shipping = subtotal >= 1500 ? 0 : 59;
+    const total = subtotal + shipping;
+    orderTotalEl.textContent = formatCurrency(total);
+
+    if (freeDeliveryMsg) {
+        freeDeliveryMsg.textContent = shipping === 0 ? 'You qualify for FREE delivery!' : '';
+    }
+  }
+}
+
 
 function createOrderHTML(order) {
   const orderDate = new Date(order.orderDate).toLocaleDateString();
@@ -924,6 +1036,12 @@ document.addEventListener('click', function(e) {
   }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.location.pathname.includes('checkout.html')) {
+    setupCheckoutPage();
+  }
+});
+
 // Make functions globally available
 window.addToCartWithVariant = addToCartWithVariant;
 window.updateCartQuantity = updateCartQuantity;
@@ -944,3 +1062,5 @@ window.downloadInvoice = downloadInvoice;
 window.searchOrders = searchOrders;
 window.filterOrders = filterOrders;
 window.clearOrderFilters = clearOrderFilters;
+window.showAddressForm = showAddressForm;
+window.placeOrder = placeOrder;

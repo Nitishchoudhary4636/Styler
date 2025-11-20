@@ -1,29 +1,3 @@
-/**********************************************
- * EMAIL VALIDATION (REQUIRED)
- **********************************************/
-function isValidEmail(email) {
-    return typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-/**********************************************
- * SEND INTERACTION EVENT (REQUIRED)
- **********************************************/
-function sendInteractionEvent(name, attributes) {
-  SalesforceInteractions.sendEvent({
-    interaction: { name: name },
-    user: {
-      identities: {
-        emailAddress: localStorage.getItem("userEmail") || ""
-      }
-    },
-    attributes: attributes || {}
-  });
-}
-
-window.isValidEmail = isValidEmail;
-window.sendInteractionEvent = sendInteractionEvent;
-
-
 window.dataLayer = window.dataLayer || [];
 
 function pushMCPListView(category) {
@@ -1173,6 +1147,3 @@ if (typeof module !== 'undefined' && module.exports) {
 function loadRelatedProducts() {
   console.log("loadRelatedProducts() called — no related products defined.");
 }
-
-window.isValidEmail = isValidEmail;
-window.sendInteractionEvent = sendInteractionEvent;
