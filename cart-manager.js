@@ -281,32 +281,7 @@ function proceedToCheckout() {
     return;
   }
   
-  showShippingModal();
-}
-
-function showShippingModal() {
-  const modal = document.getElementById('shippingModal');
-  if (!modal) return;
-  
-  const savedAddress = JSON.parse(localStorage.getItem('userAddress') || 'null');
-  if (savedAddress) {
-    document.getElementById('fullName').value = savedAddress.fullName || '';
-    document.getElementById('phone').value = savedAddress.phone || '';
-    document.getElementById('address').value = savedAddress.address || '';
-    document.getElementById('address2').value = savedAddress.address2 || '';
-    document.getElementById('city').value = savedAddress.city || '';
-    document.getElementById('state').value = savedAddress.state || '';
-    document.getElementById('pincode').value = savedAddress.pincode || '';
-    document.getElementById('landmark').value = savedAddress.landmark || '';
-  }
-  
-  // modal.style.display = 'flex';
   window.location.href = 'checkout.html';
-}
-
-function closeShippingModal() {
-  const modal = document.getElementById('shippingModal');
-  if (modal) modal.style.display = 'none';
 }
 
 function setupShippingForm() {
