@@ -224,16 +224,21 @@ function loadCartPage() {
           </div>
         </div>
         
-        <div class="cart-item-actions">
-          <div class="item-total">
-            <strong>${formatCurrency(lineTotal)}</strong>
-          </div>
-          <button class="remove-btn" 
-                  onclick="removeCartItem(${item.id}, '${escapeHtml(item.color)}', '${escapeHtml(item.size)}')">
-            <i class="fas fa-trash"></i> Remove
-          </button>
-        </div>
-      </div>
+       <div class="cart-item-actions">
+  <div class="item-total">
+    <strong>${formatCurrency(lineTotal)}</strong>
+  </div>
+
+  <button class="remove-btn" 
+          data-id="${item.id}"
+          onclick="removeCartItem(${item.id}, '${escapeHtml(item.color)}', '${escapeHtml(item.size)}')">
+
+    <i class="fas fa-trash" data-id="${item.id}"></i>
+    Remove
+  </button>
+
+</div>
+
     `;
   }).join('');
 
