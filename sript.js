@@ -1025,27 +1025,118 @@ function getNotificationIcon(type) {
   return icons[type] || 'info-circle';
 }
 
-/**
- * Salesforce Sitemap Initialization
- * This is the corrected and centralized logic.
- */
+/**********************************************
+ * SALESFORCE SITEMAP - COMPLETE & CORRECTED
+ **********************************************/
+
+// Helper function to get the last matching entry from the dataLayer
+function getDataLayerEntry(checkFn) {
+    if (!window.dataLayer || !window.dataLayer.length) return null;
+    for (var i = window.dataLayer.length - 1; i >= 0; i--) {
+        var d = window.dataLayer[i];
+        try {
+            if (checkFn(d)) return d;
+        } catch (e) {}
+    }
+    return null;
+}
+
+// Helper function to get the product object from the dataLayer
+function getProductFromDL() {
+    var entry = getDataLayerEntry(function (d) {
+        return d && d.MCP && (d.MCP.pageType === "Product" || d.MCP.pageType === "view_item") && d.MCP.Item;
+    });
+    return entry ? entry.MCP.Item : null;
+}
+
+// Helper function to poll the dataLayer until the product is found
+function waitForProduct(cb) {
+    var t = 0;
+    function check() {
+        var p = getProductFromDL();
+        if (p) {
+            return cb(p);
+        }
+        t++;
+        if (t >= 50) return cb(null); // Timeout after ~6 seconds
+        setTimeout(check, 120);
+    }
+    check();
+}
+
 function initSalesforceSitemap() {
     console.log("🔥 SalesforceInteractions Sitemap Starting...");
 
-    // This internal function contains the sitemap definition.
     function initSitemapInternal() {
         const sitemap = {
-            // The sitemap object from your previous attempts goes here.
-            // For brevity, I am omitting the full sitemap object, but it should be
-            // the one with global, pageTypeDefault, and the array of pageTypes
-            // (home, product_detail, category, cart, etc.).
+            global: {
+                onActionEvent: function (event) {
+                    var email = localStorage.getItem("userEmail");
+                    if (email && isValidEmail(email)) {
+                        event.user = event.user || {};
+                        event.user.identities = event.user.identities || {};
+                        event.user.identities.emailAddress = email;
+                    }
+                    return event;
+                }
+            },
+            pageTypeDefault: {
+                name: "default",
+                interaction: { name: "Default Page" }
+            },
+            pageTypes: [
+                {
+                    name: "home",
+                    isMatch: function () { return /index\.html$|\/$/.test(location.pathname); },
+                    interaction: { name: "Home Page" }
+                },
+                {
+                    name: "product_detail",
+                    // ✅ FIX: Match by URL first. This is instant and reliable.
+                    isMatch: function () { return /product\.html/i.test(location.pathname); },
+                    interaction: {
+                        name: SalesforceInteractions.CatalogObjectInteractionName.ViewCatalogObject,
+                        catalogObject: {
+                            type: "Product",
+                            // These functions will run after isMatch, so data will be ready.
+                            id: function () { var p = getProductFromDL(); return p ? String(p.id) : ""; },
+                            attributes: {
+                                name: function () { var p = getProductFromDL(); return p ? p.name : ""; },
+                                price: function () { var p = getProductFromDL(); return p ? Number(p.price) : 0; },
+                                category: function () { var p = getProductFromDL(); return p ? p.category : ""; },
+                                description: function () { var p = getProductFromDL(); return p ? p.description : ""; },
+                                imageUrl: function () { var p = getProductFromDL(); return p ? p.imageUrl : ""; },
+                                url: function () { var p = getProductFromDL(); return p ? p.url : location.href; }
+                            }
+                        }
+                    }
+                },
+                {
+                    name: "category",
+                    isMatch: function () { return /(bags|shoes)\.html/i.test(location.pathname); },
+                    interaction: { name: "Category: " + location.pathname }
+                },
+                {
+                    name: "cart",
+                    isMatch: function () { return /cart\.html/i.test(location.pathname); },
+                    interaction: { name: SalesforceInteractions.CartInteractionName.ViewCart }
+                },
+                {
+                    name: "checkout",
+                    isMatch: function () { return /checkout\.html/i.test(location.pathname); },
+                    interaction: { name: "Checkout Start" }
+                },
+                {
+                    name: "order_confirmation",
+                    isMatch: function () { return /orders\.html/i.test(location.pathname) && location.search.includes("success=true"); },
+                    interaction: { name: SalesforceInteractions.OrderInteractionName.Purchase }
+                }
+            ]
         };
-        // This call remains the same.
-        // SalesforceInteractions.initSitemap(sitemap);
+        SalesforceInteractions.initSitemap(sitemap);
         console.log("🎉 SalesforceInteractions Sitemap Loaded Successfully!");
     }
 
-    // Initialize the main Salesforce SDK.
     SalesforceInteractions.init({
         cookieDomain: window.location.hostname,
         consents: [{
@@ -1053,34 +1144,123 @@ function initSalesforceSitemap() {
             provider: "Styler Consent Manager",
             status: SalesforceInteractions.ConsentStatus.OptIn
         }]
-    }).then(function () {
+    }).then(() => {
         console.log("🚀 SalesforceInteractions SDK Ready");
 
-        // ✅ FIX: This is the new intelligent logic.
-        // If we are on a product page, wait for the data.
+        // ✅ FIX: Intelligent initialization.
+        // If it's a product page, wait for the data before initializing.
         if (/product\.html/i.test(location.pathname)) {
-            // The waitForProduct function polls the dataLayer.
-            waitForProduct(function() {
+            console.log("⏳ PDP detected. Waiting for product data...");
+            waitForProduct(function(p) {
+                if (p) {
+                    console.log("✅ Product data found. Initializing sitemap.");
+                } else {
+                    console.warn("⚠️ Timed out waiting for product data. Initializing anyway.");
+                }
                 initSitemapInternal(); // Initialize after data is found (or timeout).
             });
         } else {
-            // On any other page, initialize immediately.
+            // On all other pages, initialize immediately.
             initSitemapInternal();
         }
-    }).catch(function (err) {
+    }).catch((err) => {
         console.error("SDK Init Failed:", err);
     });
 }
 
-// Make the function globally available for other pages if needed.
 window.initSalesforceSitemap = initSalesforceSitemap;
+
+function showMoreBags() {
+  const mainContainer = document.getElementById('bagsGrid');
+  const viewMoreBtn = document.getElementById('viewMoreBagsBtn');
   
-  if (!mainContainer) return;
+  if (!mainContainer || !window.filteredBags) return;
   
-  const isHomePage = window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '';
-  if (isHomePage && !window.globalSearchResults) {
-    if (viewMoreBtn) viewMoreBtn.style.display = 'none';
-    return;
+  const nextBatch = window.filteredBags.slice(loadedBagsCount, loadedBagsCount + 3);
+  const remainingAfterBatch = window.filteredBags.slice(loadedBagsCount + 3);
+  
+  if (nextBatch.length > 0) {
+    const nextBagsHTML = nextBatch.map(product => productCardHtml(product)).join('');
+    mainContainer.innerHTML += nextBagsHTML;
+    
+    loadedBagsCount += nextBatch.length;
+    
+
+    if (remainingAfterBatch.length > 0) {
+      viewMoreBtn.innerHTML = `<i class="fas fa-plus"></i> View More Bags (${remainingAfterBatch.length} remaining)`;
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+}
+
+function showMoreShoes() {
+  const mainContainer = document.getElementById('shoesGrid');
+  const viewMoreBtn = document.getElementById('viewMoreShoesBtn');
+  
+  if (!mainContainer || !window.filteredShoes) return;
+  
+  const nextBatch = window.filteredShoes.slice(loadedShoesCount, loadedShoesCount + 3);
+  const remainingAfterBatch = window.filteredShoes.slice(loadedShoesCount + 3);
+  
+  if (nextBatch.length > 0) {
+    const nextShoesHTML = nextBatch.map(product => productCardHtml(product)).join('');
+    mainContainer.innerHTML += nextShoesHTML;
+    
+    loadedShoesCount += nextBatch.length;
+    
+
+    if (remainingAfterBatch.length > 0) {
+      viewMoreBtn.innerHTML = `<i class="fas fa-plus"></i> View More Shoes (${remainingAfterBatch.length} remaining)`;
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+}
+
+window.quickAddToCart = quickAddToCart;
+window.addToCart = addToCart;
+window.buyNow = buyNow;
+window.loadFeaturedProducts = loadFeaturedProducts;
+window.loadBagsPage = loadBagsPage;
+window.loadShoesPage = loadShoesPage;
+window.loadProductDetail = loadProductDetail;
+window.applySearchFilter = applySearchFilter;
+window.displayGlobalSearchResults = displayGlobalSearchResults;
+window.clearGlobalSearch = clearGlobalSearch;
+window.showMoreProducts = showMoreProducts;
+window.showMoreBags = showMoreBags;
+window.showMoreShoes = showMoreShoes;
+window.products = products;
+window.formatCurrency = formatCurrency;
+window.escapeHtml = escapeHtml;
+window.truncate = truncate;
+window.currentUser = currentUser;
+window.isLoggedIn = isLoggedIn;
+window.productCardHtml = productCardHtml;
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    products,
+    formatCurrency,
+    escapeHtml,
+    truncate,
+    productCardHtml,
+    quickAddToCart,
+    addToCart,
+    loadFeaturedProducts,
+    loadBagsPage,
+    loadShoesPage,
+    loadProductDetail
+  };
+}
+
+function loadRelatedProducts() {
+  console.log("loadRelatedProducts() called — no related products defined.");
+}
+
+window.isValidEmail = isValidEmail;
+window.sendInteractionEvent = sendInteractionEvent;
   }
   
   const productsToShow = window.globalSearchResults || products;
