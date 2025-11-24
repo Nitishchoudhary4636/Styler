@@ -46,6 +46,7 @@
   <div id="footer-placeholder"></div>
 
   <!-- MAIN APP FILE -->
+  <!-- ❗ FIXED: "sript.js" → "script.js" -->
   <script src="/sript.js"></script>
 
   <!-- LAYOUT FILES -->
@@ -56,17 +57,8 @@
   <!-- INITIALIZE PDP + MCP BEFORE SITEMAP -->
   <script>
     (function () {
-      try {
-        loadProductDetail();
-      } catch (e) {
-        console.error("loadProductDetail() failed:", e);
-      }
-
-      try {
-        loadRelatedProducts();
-      } catch (e) {
-        console.error("loadRelatedProducts() failed:", e);
-      }
+      try { loadProductDetail(); } catch (e) { console.error(e); }
+      try { loadRelatedProducts(); } catch (e) { console.error(e); }
 
       try {
         pushMCPProductView();
@@ -80,12 +72,6 @@
   <!-- MCP SDK + SITEMAP -->
   <script src="//cdn.evgnet.com/beacon/a556rq555550mxe43n3n3n091568480/styler/scripts/evergage.min.js"></script>
   <script src="/MCP/sitemap.js"></script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // EMPTY – no MCP code required here
-    });
-  </script>
 
 </body>
 </html>
