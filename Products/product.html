@@ -64,15 +64,17 @@
 
       try {
         pushMCPProductView();
-        console.log("📌 MCP PDP Event pushed BEFORE sitemap.");
+        console.log("📌 MCP PDP Event pushed.");
+
+        // ✅ FIX: Manually initialize the sitemap AFTER the data is pushed.
+        if (typeof window.initSalesforceSitemap === 'function') {
+          console.log("🚀 Manually initializing Salesforce Sitemap now.");
+          window.initSalesforceSitemap();
+        }
       } catch (e) {
         console.error("pushMCPProductView() failed:", e);
       }
     })();
   </script>
-
-  <!-- MCP SDK + SITEMAP -->
- 
-
 </body>
 </html>
