@@ -1261,7 +1261,7 @@ function loadRelatedProducts() {
 
 window.isValidEmail = isValidEmail;
 window.sendInteractionEvent = sendInteractionEvent;
-  }
+  
   
   const productsToShow = window.globalSearchResults || products;
   const isSearchResults = !!window.globalSearchResults;
@@ -1283,7 +1283,7 @@ window.sendInteractionEvent = sendInteractionEvent;
       viewMoreBtn.style.display = 'none';
     }
   }
-}
+
 
 function showMoreBags() {
   const mainContainer = document.getElementById('bagsGrid');
