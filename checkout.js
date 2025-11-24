@@ -9,7 +9,7 @@ function renderCheckoutProduct() {
   if (!products.length && localStorage.getItem('products')) {
     products = JSON.parse(localStorage.getItem('products'));
   }
-  let product = null;
+  let product = null; 
   if (productId) {
     product = products.find(p => p.id === productId);
   }
