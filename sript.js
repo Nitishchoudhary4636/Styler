@@ -1262,13 +1262,17 @@ function loadRelatedProducts() {
 window.isValidEmail = isValidEmail;
 window.sendInteractionEvent = sendInteractionEvent;
   
-  
+function showMoreProducts() {
+  const mainContainer = document.getElementById('featuredProducts');
+  const viewMoreBtn = document.getElementById('viewMoreBtn');
+  if (!mainContainer) return;
+
   const productsToShow = window.globalSearchResults || products;
   const isSearchResults = !!window.globalSearchResults;
-  
+
   const nextBatch = productsToShow.slice(loadedProductsCount, loadedProductsCount + 3);
   const remainingAfterBatch = productsToShow.slice(loadedProductsCount + 3);
-  
+
   if (nextBatch.length > 0) {
     const nextProductsHTML = nextBatch.map(product => productCardHtml(product)).join('');
     mainContainer.innerHTML += nextProductsHTML;
@@ -1283,7 +1287,7 @@ window.sendInteractionEvent = sendInteractionEvent;
       viewMoreBtn.style.display = 'none';
     }
   }
-
+}
 
 function showMoreBags() {
   const mainContainer = document.getElementById('bagsGrid');
