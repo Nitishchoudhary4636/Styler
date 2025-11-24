@@ -12,7 +12,7 @@ function loadHeader() {
     <header class="navbar">
       <div class="container nav-container">
         <div class="nav-brand">
-          <a href="index.html">
+          <a href="/index.html">
             <h2><i class="fas fa-gem"></i> Styler</h2>
           </a>
         </div>

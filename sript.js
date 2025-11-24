@@ -1377,6 +1377,29 @@ if (typeof module !== 'undefined' && module.exports) {
 
 function loadRelatedProducts() {
   console.log("loadRelatedProducts() called — no related products defined.");
+  const container = document.getElementById('relatedProducts');
+  if (!container) return;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentProductId = parseInt(urlParams.get("id"));
+
+  const currentProduct = products.find(p => p.id === currentProductId);
+  if (!currentProduct) {
+    container.innerHTML = '';
+    return;
+  }
+
+  let related = products.filter(p => 
+    p.category === currentProduct.category && p.id !== currentProductId
+  );
+
+  // Shuffle the related products for variety
+  for (let i = related.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [related[i], related[j]] = [related[j], related[i]];
+  }
+
+  container.innerHTML = related.slice(0, 3).map(product => productCardHtml(product)).join('');
 }
 
 window.isValidEmail = isValidEmail;
