@@ -35,11 +35,12 @@ function pushMCPListView(category) {
   window.dataLayer.push({
     event: 'MCP',
     timestamp: new Date().toISOString(),
-    mcpVersion: '1.0.0',
     MCP: {
       currency: 'INR',
       itemListId: category + '_Listing',
       itemListName: 'Products',
+      pageType: 'category',
+      pageName: category + '_Listing',
       url: window.location.href,
       items: itemsArray
     }
