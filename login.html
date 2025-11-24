@@ -11,16 +11,14 @@
   <script src="api-config.js"></script>
 </head>
 <body>
- 
+
   <div id="header-placeholder"></div>
 
-  
   <section class="auth-section">
     <div class="container">
       <div class="auth-container">
         <div class="auth-form">
           <h1 id="authTitle">Login</h1>
-          
           <div id="authMessage" class="auth-message" style="display: none;"></div>
           
           <form id="authForm">
@@ -81,29 +79,36 @@
 
   <div id="footer-placeholder"></div>
 
-
   <script src="/sript.js"></script>
   <script src="/header.js"></script>
   <script src="/footer.js"></script>
+
   <script>
+    // Initialize datalayer for Salesforce
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      MCP: {
+        pageType: "login",
+        pageName: "User Login Page"
+      }
+    });
+
     let isSignupMode = false;
 
     document.addEventListener('DOMContentLoaded', function() {
-      
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('mode') === 'signup') {
         toggleAuthMode();
       }
-      
-    
+
       document.getElementById('authForm').addEventListener('submit', handleAuth);
     });
 
     function toggleAuthMode(event) {
       if (event) event.preventDefault();
-      
+
       isSignupMode = !isSignupMode;
-      
+
       const title = document.getElementById('authTitle');
       const confirmGroup = document.getElementById('confirmPasswordGroup');
       const nameGroup = document.getElementById('nameGroup');
@@ -111,7 +116,7 @@
       const submitBtn = document.getElementById('authSubmitBtn');
       const toggleText = document.getElementById('authToggleText');
       const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-      
+
       if (isSignupMode) {
         title.textContent = 'Sign Up';
         confirmGroup.style.display = 'block';
@@ -127,26 +132,22 @@
         confirmGroup.style.display = 'none';
         nameGroup.style.display = 'none';
         phoneGroup.style.display = 'none';
-        forgotPasswordLink.style.display = 'block'; 
+        forgotPasswordLink.style.display = 'block';
         submitBtn.textContent = 'Login';
         toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleAuthMode(event)">Sign up here</a>';
         document.getElementById('name').required = false;
         document.getElementById('phone').required = false;
       }
-      
+
       document.getElementById('authForm').reset();
       hideAuthMessage();
     }
 
     // --- Client-Side Auth Functions (No Backend) ---
-
     function clientSideSignup(userData) {
       const users = JSON.parse(localStorage.getItem('users') || '[]');
       const userExists = users.some(user => user.email === userData.email);
-
-      if (userExists) {
-        throw new Error('An account with this email already exists.');
-      }
+      if (userExists) throw new Error('An account with this email already exists.');
 
       users.push(userData);
       localStorage.setItem('users', JSON.stringify(users));
@@ -156,66 +157,72 @@
     function clientSideLogin(email, password) {
       const users = JSON.parse(localStorage.getItem('users') || '[]');
       const user = users.find(u => u.email === email && u.password === password);
-
-      if (!user) {
-        throw new Error('Invalid email or password.');
-      }
+      if (!user) throw new Error('Invalid email or password.');
       return user;
     }
 
     async function handleAuth(e) {
       e.preventDefault();
-      
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       const submitBtn = document.getElementById('authSubmitBtn');
-      
-    
+
       submitBtn.disabled = true;
       submitBtn.textContent = isSignupMode ? 'Creating Account...' : 'Logging in...';
-      
+
       try {
         if (isSignupMode) {
-          
-          if (password !== confirmPassword) {
-            showAuthMessage('Passwords do not match', 'error');
-            return;
-          }
-          
-          if (password.length < 6) {
-            showAuthMessage('Password must be at least 6 characters', 'error');
-            return;
-          }
-          
+          if (password !== confirmPassword) throw new Error('Passwords do not match');
+          if (password.length < 6) throw new Error('Password must be at least 6 characters');
+
           const name = document.getElementById('name').value;
           const phone = document.getElementById('phone').value;
-          
-          if (!name.trim() || !phone.trim()) {
-            showAuthMessage('Please fill in all required fields', 'error');
-            return;
-          }
-          
-          
+
+          if (!name.trim() || !phone.trim()) throw new Error('Please fill in all required fields');
+
           const userData = { name: name.trim(), email, password, phone: phone.trim() };
-          const user = clientSideSignup(userData); // Replaced ApiService
-          
+          const user = clientSideSignup(userData);
+
+          // Push signup event to datalayer
+          window.dataLayer.push({
+            event: "user_signup",
+            user: {
+              identities: { emailAddress: email },
+              attributes: {
+                firstName: name.trim(),
+                lastName: "", // you can add separate field if needed
+                phone: phone.trim(),
+                marketingOptIn: false
+              }
+            }
+          });
+
           showAuthMessage('Account created successfully! Please login.', 'success');
-          
-          setTimeout(() => {
-            toggleAuthMode();
-          }, 1500);
-          
+          setTimeout(() => toggleAuthMode(), 1500);
+
         } else {
-    
-          const user = clientSideLogin(email, password); // Replaced ApiService
-          
-      
+          const user = clientSideLogin(email, password);
+
+          // Push login event to datalayer
+          window.dataLayer.push({
+            event: "user_login",
+            user: {
+              identities: { emailAddress: email },
+              attributes: {
+                firstName: user.name || "",
+                lastName: "",
+                phone: user.phone || "",
+                marketingOptIn: false
+              }
+            }
+          });
+
           localStorage.setItem('currentUser', JSON.stringify(user));
           localStorage.setItem('userEmail', email);
-          
+
           showAuthMessage('Login successful! Redirecting...', 'success');
-          
           setTimeout(() => {
             const returnUrl = sessionStorage.getItem('returnUrl') || 'index.html';
             sessionStorage.removeItem('returnUrl');
@@ -226,7 +233,6 @@
         console.error('Auth error:', error);
         showAuthMessage(error.message || 'An error occurred. Please try again.', 'error');
       } finally {
-        
         submitBtn.disabled = false;
         submitBtn.textContent = isSignupMode ? 'Create Account' : 'Login';
       }
@@ -243,12 +249,7 @@
       const messageDiv = document.getElementById('authMessage');
       messageDiv.style.display = 'none';
     }
-
-    function showForgotPassword() {
-      alert('Forgot password functionality would be implemented with backend integration.');
-    }
   </script>
- 
 
 </body>
 </html>
