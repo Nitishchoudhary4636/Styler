@@ -490,39 +490,14 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
   try {
     showNotification('Placing order...', 'info');
     
-    // Save order to backend - REPLACED WITH LOCALSTORAGE
-    // const savedOrder = await ApiService.createOrder(orderData);
-    
-    // Also save to localStorage as backup
-    const localOrder = {
-      id: 'ORD-' + Date.now(), // Removed savedOrder.id
-      userId: currentUserData.email,
-      items: cart.map(item => ({
-        name: item.name,
-        image: item.image,
-        color: item.color,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price
-      })),
-      subtotal: subtotal,
-      shipping: shipping,
-      tax: tax,
-      total: total,
-      shippingAddress: shippingAddress,
-      status: 'Confirmed',
-      orderDate: new Date().toISOString(),
-      estimatedDelivery: getEstimatedDelivery(),
-      paymentMethod: 'Cash on Delivery'
-    };
-    
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    orders.push(localOrder);
-    localStorage.setItem('orders', JSON.stringify(orders));
+    // Save order to backend
+    const savedOrder = await ApiService.createOrder(orderData);
     
     // Clear cart
     localStorage.removeItem('cart');
     updateCartCount();
+    
+    pushMCPPurchase(savedOrder);
     
     const thankYouModal = document.getElementById('thankYouModal');
     if (thankYouModal) {
@@ -532,7 +507,7 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     showNotification('Order placed successfully!', 'success');
     
     setTimeout(() => {
-      window.location.href = `orders.html?success=true&orderId=${localOrder.id}&total=${localOrder.total}`;
+      window.location.href = `orders.html?success=true&orderId=${savedOrder.id}&total=${savedOrder.totalAmount}`;
     }, 1500);
     
   } catch (error) {
@@ -557,31 +532,19 @@ async function loadOrdersPage() {
     const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
     console.log('🔍 Loading orders for user:', currentUserData);
     
-    // Try to fetch orders from backend first
+    // Fetch orders from the backend
     if (currentUserData.id) {
-      // REMOVED: Backend fetch logic. We will now only use localStorage.
-      console.log('🔄 Using localStorage for orders.');
-      allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      allOrders = await ApiService.getUserOrders(currentUserData.id);
+      console.log('✅ Orders fetched from backend:', allOrders.length);
     } else {
-      console.log('⚠️ No user ID found, using localStorage');
-      allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      throw new Error('User not logged in or user ID not found.');
     }
   } catch (error) {
     console.error('Error loading orders:', error);
+    showNotification('Could not load orders. Please try again later.', 'error');
     allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
   }
-  
-  // Filter orders for current user (allOrders should already be set from backend or localStorage)
-  const currentUserData = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  console.log('🔍 Filtering orders for user:', currentUserData.email);
-  console.log('📊 Total orders before filtering:', allOrders.length);
-  
-  // Filter by user email or ID
-  filteredOrders = allOrders.filter(order => 
-    order.userId === currentUserData.email || 
-    order.userId === currentUserData.id ||
-    order.userEmail === currentUserData.email
-  );
+  filteredOrders = allOrders;
   
   console.log('✅ Filtered orders for current user:', filteredOrders.length);
   
@@ -617,7 +580,7 @@ function renderOrders() {
 function createOrderHTML(order) {
   const orderDate = new Date(order.orderDate).toLocaleDateString();
   const estimatedDelivery = new Date(order.estimatedDelivery).toLocaleDateString();
-  const progressPercentage = getOrderProgress(order.status);
+  const progressPercentage = getOrderProgress(order.status || 'PENDING');
   
   return `
     <div class="order-card">
@@ -625,7 +588,7 @@ function createOrderHTML(order) {
         <div class="order-basic-info">
           <h3>Order ${order.id}</h3>
           <div class="order-meta">
-            <span class="order-date"><i class="fas fa-calendar"></i> ${orderDate}</span>
+            <span class="order-date"><i class="fas fa-calendar"></i> ${new Date(order.createdAt).toLocaleDateString()}</span>
             <span class="order-status status-${order.status.toLowerCase()}">${order.status}</span>
           </div>
         </div>
@@ -641,14 +604,14 @@ function createOrderHTML(order) {
         <div class="order-summary">
           <div class="summary-item">
             <span>Total Amount:</span>
-            <strong>${formatCurrency(order.total)}</strong>
+            <strong>${formatCurrency(order.totalAmount)}</strong>
           </div>
           <div class="summary-item">
 
           </div>
           <div class="summary-item">
             <span>Estimated Delivery:</span>
-            <strong>${estimatedDelivery}</strong>
+            <strong>${new Date(order.estimatedDelivery).toLocaleDateString()}</strong>
           </div>
         </div>
         
@@ -681,11 +644,11 @@ function createOrderHTML(order) {
         <div class="shipping-info">
           <h4><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
           <div class="address-details">
-            <p><strong>${order.shippingAddress.fullName}</strong></p>
-            <p>${order.shippingAddress.address}</p>
-            ${order.shippingAddress.address2 ? `<p>${order.shippingAddress.address2}</p>` : ''}
-            <p>${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}</p>
-            <p>Phone: ${order.shippingAddress.phone}</p>
+            <p><strong>${order.shippingAddress.fullName || ''}</strong></p>
+            <p>${order.shippingAddress.addressLine1 || ''}</p>
+            ${order.shippingAddress.addressLine2 ? `<p>${order.shippingAddress.addressLine2}</p>` : ''}
+            <p>${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} - ${order.shippingAddress.pincode || ''}</p>
+            <p>Phone: ${order.shippingAddress.phone || ''}</p>
           </div>
         </div>
       </div>
@@ -695,6 +658,7 @@ function createOrderHTML(order) {
 
 function getOrderProgress(status) {
   const progressMap = {
+    'PENDING': 10,
     'Confirmed': 25,
     'Processing': 50,
     'Shipped': 75,
@@ -820,8 +784,7 @@ function applyOrderFilters() {
   
   if (searchTerm) {
     filteredOrders = filteredOrders.filter(order => 
-      order.id.toLowerCase().includes(searchTerm) ||
-      order.trackingNumber.toLowerCase().includes(searchTerm) ||
+      String(order.id).toLowerCase().includes(searchTerm) ||
       order.items.some(item => item.name.toLowerCase().includes(searchTerm))
     );
   }

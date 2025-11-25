@@ -7,7 +7,7 @@ const API_CONFIG = {
     BASE_URL: (() => {
         // OVERRIDE: Always use Render in production
         if (window.FORCE_RENDER_BACKEND && window.location.hostname !== 'localhost') {
-            return 'https://styler-backend.onrender.com';
+            return 'https://styler-backend-4upl.onrender.com';
         }
         
         const hostname = window.location.hostname;
@@ -18,7 +18,7 @@ const API_CONFIG = {
         }
         
         // Production - Render backend with PostgreSQL
-        return window.BACKEND_URL || 'https://styler-backend.onrender.com';
+        return window.BACKEND_URL || 'https://styler-backend-4upl.onrender.com';
     })(),
     ENDPOINTS: {
         USERS: '/api/users',
