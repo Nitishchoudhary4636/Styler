@@ -581,6 +581,7 @@ function renderOrders() {
 function createOrderHTML(order) {
   const orderDate = new Date(order.orderDate).toLocaleDateString();
   const estimatedDelivery = new Date(order.estimatedDelivery).toLocaleDateString();
+  const shippingAddress = order.shippingAddress || {}; // Safely handle missing address
   const progressPercentage = getOrderProgress(order.status || 'PENDING');
   
   return `
@@ -647,11 +648,11 @@ function createOrderHTML(order) {
         <div class="shipping-info">
           <h4><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
           <div class="address-details">
-            <p><strong>${order.shippingAddress.fullName || ''}</strong></p>
-            <p>${order.shippingAddress.addressLine1 || ''}</p>
-            ${order.shippingAddress.addressLine2 ? `<p>${order.shippingAddress.addressLine2}</p>` : ''}
-            <p>${order.shippingAddress.city || ''}, ${order.shippingAddress.state || ''} - ${order.shippingAddress.pincode || ''}</p>
-            <p>Phone: ${order.shippingAddress.phone || ''}</p>
+            <p><strong>${shippingAddress.fullName || 'Address not available'}</strong></p>
+            <p>${shippingAddress.addressLine1 || ''}</p>
+            ${shippingAddress.addressLine2 ? `<p>${shippingAddress.addressLine2}</p>` : ''}
+            <p>${shippingAddress.city || ''}${shippingAddress.state ? `, ${shippingAddress.state}` : ''}${shippingAddress.pincode ? ` - ${shippingAddress.pincode}` : ''}</p>
+            <p>${shippingAddress.phone ? `<i class="fas fa-phone"></i> ${shippingAddress.phone}` : ''}</p>
           </div>
         </div>
       </div>
