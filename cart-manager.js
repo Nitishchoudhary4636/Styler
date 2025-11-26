@@ -660,6 +660,21 @@ function extractVariantParts(variant) {
   };
 }
 
+function findVariantValue(item, keywords) {
+  if (!item) return null;
+  const keys = Object.keys(item || {});
+  for (const key of keys) {
+    const normalizedKey = key.toLowerCase();
+    if (keywords.some(keyword => normalizedKey.includes(keyword))) {
+      const value = item[key];
+      if (typeof value === 'string' && value.trim()) return value.trim();
+      if (typeof value === 'number') return String(value);
+      if (Array.isArray(value) && value.length) return value[0];
+    }
+  }
+  return null;
+}
+
 function getCatalogProductById(id) {
   if (!window.products) return null;
   return window.products.find(p => Number(p.id) === Number(id));
@@ -718,14 +733,16 @@ function createOrderHTML(order, isExpanded = false) {
           <h4>Items (${Array.isArray(order.items) ? order.items.length : 0})</h4>
           <div class="items-list">
             ${Array.isArray(order.items) ? order.items.map(item => {
-                const itemName = item.name || item.productName || getCatalogProductById(item.productId)?.name || 'Unknown Item';
-                const itemImage = item.image || item.imageUrl || getCatalogProductById(item.productId)?.image || '/Bags/placeholder.jpg';
-                const variantParts = extractVariantParts(item.variant || item.variantLabel || `${item.color || ''} - ${item.size || ''}`);
                 const catalogProduct = getCatalogProductById(item.productId);
+                const itemName = item.name || item.productName || catalogProduct?.name || 'Unknown Item';
+                const itemImage = item.image || item.imageUrl || catalogProduct?.image || '/Bags/placeholder.jpg';
+                const variantParts = extractVariantParts(item.variant || item.variantLabel || `${item.color || ''} - ${item.size || ''}`);
                 const defaultColor = catalogProduct?.colors?.[0] || catalogProduct?.color || null;
                 const defaultSize = catalogProduct?.sizes?.[0] || catalogProduct?.size || null;
-                const itemColor = item.color || variantParts.color || defaultColor || 'N/A';
-                const itemSize = item.size || variantParts.size || defaultSize || 'N/A';
+                const keywordColor = findVariantValue(item, ['color', 'colour', 'shade']);
+                const keywordSize = findVariantValue(item, ['size', 'dimension', 'fit']);
+                const itemColor = item.color || keywordColor || variantParts.color || defaultColor || 'N/A';
+                const itemSize = item.size || keywordSize || variantParts.size || defaultSize || 'N/A';
                 const linePrice = (item.price || 0) * (item.quantity || 0);
                 return `
                   <div class="order-item">
