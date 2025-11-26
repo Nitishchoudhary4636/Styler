@@ -859,7 +859,11 @@ function showOrderSuccess(orderId, total) {
   const thankYouMessage = document.getElementById('thankYouMessage');
   if (!thankYouMessage) return;
   
-  const order = allOrders.find(o => o.id === orderId);
+  const safeOrderId = orderId ? String(orderId) : null;
+  const order = allOrders.find(o => safeOrderId && String(o.id) === safeOrderId);
+  if (safeOrderId && !order) {
+    console.warn('showOrderSuccess: order not found', safeOrderId, allOrders);
+  }
   if (!order) return;
   
   // Push purchase event to dataLayer for analytics
