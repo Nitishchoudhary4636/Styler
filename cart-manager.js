@@ -881,15 +881,38 @@ function showOrderSuccess(orderId, total) {
 
   const itemsDisplay = document.getElementById('orderItemsDisplay');
   if (itemsDisplay && Array.isArray(order.items)) {
+    const successItems = order.items.map(item => {
+      const catalogProduct = getCatalogProductById(item.productId);
+      const itemName = item.name || item.productName || catalogProduct?.name || 'Purchased Item';
+      const itemImage = item.imageUrl || item.image || catalogProduct?.image || '/Bags/placeholder.jpg';
+      const variantParts = extractVariantParts(item.variant || item.variantLabel || `${item.color || ''} - ${item.size || ''}`);
+      const itemColor = item.color || variantParts.color || findVariantValue(item, ['color', 'colour', 'shade']) || 'N/A';
+      const itemSize = item.size || variantParts.size || findVariantValue(item, ['size', 'dimension', 'fit']) || 'N/A';
+      const lineTotal = (item.price || 0) * (item.quantity || 0);
+      return `
+        <div class="success-order-item">
+          <img src="${itemImage}" alt="${escapeHtml(itemName)}">
+          <div>
+            <strong>${escapeHtml(itemName)}</strong>
+            <p>Color: ${escapeHtml(itemColor)} | Size: ${escapeHtml(itemSize)}</p>
+            <p>Qty: ${item.quantity || 0} × ${formatCurrency(item.price || 0)} = ${formatCurrency(lineTotal)}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+
     itemsDisplay.innerHTML = `
       <h4>Items Ordered</h4>
-      ${order.items.map(item => `
-        <div class="success-order-item">
-          <img src="${item.imageUrl || item.image}" alt="${item.productName}">
-          <span>${item.productName} (Qty: ${item.quantity})</span>
-          <strong>${formatCurrency(item.price * item.quantity)}</strong>
-        </div>
-      `).join('')}
+      <div class="success-order-items">
+        ${successItems}
+      </div>
+      <div class="success-order-meta">
+        <div><strong>Order Total:</strong> ${formatCurrency(order.totalAmount || total)}</div>
+        <div><strong>Shipping:</strong> ${order.shipping === 0 ? 'FREE' : formatCurrency(order.shipping || 0)}</div>
+        <div><strong>Tax:</strong> ${formatCurrency(order.tax || 0)}</div>
+        <div><strong>Payment Method:</strong> ${order.paymentMethod || 'COD'}</div>
+        <div><strong>Order Status:</strong> ${order.status}</div>
+      </div>
     `;
   }
   
