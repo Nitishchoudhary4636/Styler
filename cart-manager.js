@@ -462,28 +462,24 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
   
   // Prepare order data for backend
   const orderData = {
-    userId: currentUserData.id,
-    totalAmount: total,
-    status: 'PENDING',
-    paymentMethod: 'COD',
-    items: cart.map(item => ({
-      productId: item.id,
-      productName: item.name,
-      quantity: item.quantity,
-      price: item.price,
-      color: item.color,
-      size: item.size,
-      image: item.image
-    })),
-    shippingAddress: {
-      fullName: shippingAddress.fullName,
-      addressLine1: shippingAddress.address,
-      addressLine2: shippingAddress.address2 || '',
-      city: shippingAddress.city,
-      state: shippingAddress.state,
-      pincode: shippingAddress.pincode,
-      phone: shippingAddress.phone
-    }
+      userId: currentUserData.id,
+      totalAmount: total,
+      status: 'PENDING',
+      paymentMethod: 'COD',
+      items: cart.map(item => ({ 
+          productId: item.id, 
+          productName: item.name, // CRITICAL: Backend requires this field
+          quantity: item.quantity, 
+          price: item.price, 
+          color: item.color, 
+          size: item.size,
+          imageUrl: item.image // Use imageUrl to match backend model
+      })),
+      shippingAddress: {
+          ...shippingAddress,
+          addressLine1: shippingAddress.address, // Map frontend 'address' to 'addressLine1'
+          postalCode: shippingAddress.pincode // Map frontend 'pincode' to 'postalCode'
+      }
   };
   
   try {
@@ -574,7 +570,7 @@ function renderOrders() {
   
   ordersContainer.innerHTML = filteredOrders
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .map((order, index) => createOrderHTML(order, index === 0)) // Pass true for the first (latest) order
+    .map((order, index) => createOrderHTML(order, false)) // Pass false, no order expanded by default
     .join('');
 }
 
@@ -586,7 +582,7 @@ function createOrderHTML(order, isExpanded = false) {
   
   return `
     <div class="order-card">
-      <div class="order-header">
+      <div class="order-header" onclick="toggleOrderDetails(event)">
         <div class="order-basic-info">
           <h3>Order #${order.id}</h3>
           <div class="order-meta">
@@ -761,6 +757,20 @@ function showOrderSuccess(orderId, total) {
         <p>${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}</p>
         <p><i class="fas fa-phone"></i> ${order.shippingAddress.phone}</p>
       </div>
+    `;
+  }
+
+  const itemsDisplay = document.getElementById('orderItemsDisplay');
+  if (itemsDisplay && Array.isArray(order.items)) {
+    itemsDisplay.innerHTML = `
+      <h4>Items Ordered</h4>
+      ${order.items.map(item => `
+        <div class="success-order-item">
+          <img src="${item.imageUrl || item.image}" alt="${item.productName}">
+          <span>${item.productName} (Qty: ${item.quantity})</span>
+          <strong>${formatCurrency(item.price * item.quantity)}</strong>
+        </div>
+      `).join('')}
     `;
   }
   
