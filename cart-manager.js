@@ -468,12 +468,12 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
       paymentMethod: 'COD',
       items: cart.map(item => ({ 
           productId: item.id, 
-          productName: item.name, // CRITICAL: Backend requires this field
+          productName: item.name, // This is required by the backend
           quantity: item.quantity, 
           price: item.price, 
           color: item.color, 
           size: item.size,
-          imageUrl: item.image // Use imageUrl to match backend model
+          imageUrl: item.image // Match the backend model field
       })),
       shippingAddress: {
           ...shippingAddress,
