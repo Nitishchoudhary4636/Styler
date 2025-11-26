@@ -865,9 +865,13 @@ function showOrderSuccess(orderId, total) {
   // Push purchase event to dataLayer for analytics
   pushMCPPurchase(order);
 
-  document.getElementById('orderIdDisplay').textContent = orderId;
-  document.getElementById('orderTotalDisplay').textContent = formatCurrency(parseInt(total));
-  document.getElementById('deliveryDateDisplay').textContent = new Date(order.estimatedDelivery).toLocaleDateString();
+  document.getElementById('orderIdDisplay').textContent = `#${order.id}`;
+  document.getElementById('orderTotalDisplay').textContent = formatCurrency(order.totalAmount || total);
+  document.getElementById('deliveryDateDisplay').textContent = new Date(order.estimatedDelivery || order.createdAt).toLocaleDateString();
+  const heroBadge = thankYouMessage.querySelector('.hero-badge');
+  if (heroBadge) {
+    heroBadge.textContent = order.status || 'Confirmed';
+  }
   
   const shippingDisplay = document.getElementById('shippingAddressDisplay');
   if (shippingDisplay && order.shippingAddress) {
@@ -933,6 +937,13 @@ function hideThankYouMessage() {
   const thankYouMessage = document.getElementById('thankYouMessage');
   if (thankYouMessage) {
     thankYouMessage.style.display = 'none';
+  }
+}
+
+function focusOnOrderList() {
+  const ordersList = document.getElementById('ordersList');
+  if (ordersList) {
+    ordersList.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
@@ -1057,3 +1068,4 @@ window.searchOrders = searchOrders;
 window.filterOrders = filterOrders;
 window.clearOrderFilters = clearOrderFilters;
 window.toggleOrderDetails = toggleOrderDetails;
+window.focusOnOrderList = focusOnOrderList;

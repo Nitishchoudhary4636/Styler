@@ -20,27 +20,40 @@
       
       
       <div id="thankYouMessage" class="thank-you-message" style="display: none;">
-        <div class="success-icon">
-          <i class="fas fa-check-circle"></i>
+        <div class="order-confirmation-hero">
+          <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="hero-text">
+            <p class="hero-label">Order received</p>
+            <h2>Thank you for your purchase!</h2>
+            <p class="hero-subtitle">We will send you a confirmation email shortly with delivery updates.</p>
+          </div>
+          <div class="hero-badge">Confirmed</div>
         </div>
-        <h2>Thank You for Your Order!</h2>
-        <p>Your order has been successfully placed.</p>
-        <div class="order-success-details">
-          <div class="success-detail">
-            <strong>Order ID:</strong> <span id="orderIdDisplay"></span>
+
+        <div class="hero-order-meta">
+          <div>
+            <span>Order Number</span>
+            <strong id="orderIdDisplay">#000</strong>
           </div>
-          <div class="success-detail">
-            <strong>Total Amount:</strong> <span id="orderTotalDisplay"></span>
+          <div>
+            <span>Total Amount</span>
+            <strong id="orderTotalDisplay">₹0</strong>
           </div>
-          <div class="success-detail">
-            <strong>Estimated Delivery:</strong> <span id="deliveryDateDisplay"></span>
+          <div>
+            <span>Estimated Delivery</span>
+            <strong id="deliveryDateDisplay">—</strong>
           </div>
         </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="focusOnOrderList()">View Order Details</button>
+          <button class="btn btn-outline" onclick="hideThankYouMessage()">Continue Shopping</button>
+        </div>
+
         <div id="orderItemsDisplay" class="order-items-display"></div>
-        <div id="shippingAddressDisplay" class="shipping-address-display">
-        
-        </div>
-        <button class="btn btn-primary" onclick="hideThankYouMessage()">Continue Shopping</button>
+        <div id="shippingAddressDisplay" class="shipping-address-display"></div>
       </div>
 
       
