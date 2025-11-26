@@ -321,6 +321,13 @@ function setupShippingForm() {
   });
 }
 
+function closeShippingModal() {
+  const modal = document.getElementById('shippingModal');
+  if (!modal) return;
+  modal.style.display = 'none';
+  modal.classList.remove('show');
+}
+
 function showPaymentModal(shippingAddress) {
   const cart = getCart();
   
@@ -477,11 +484,18 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
       })),
       shippingAddress: {
           ...shippingAddress,
-          addressLine1: shippingAddress.address, // Map frontend 'address' to 'addressLine1'
-          postalCode: shippingAddress.pincode // Map frontend 'pincode' to 'postalCode'
+          addressLine1: shippingAddress.address,
+          postalCode: shippingAddress.pincode
       }
   };
-  
+
+  const orderTotals = { subtotal, shipping, tax, total };
+  if (window.API_CONFIG?.USE_OFFLINE_FALLBACK) {
+    const fallbackOrder = createOfflineOrder(orderData, orderTotals);
+    handleOrderSuccess(fallbackOrder, total, { offline: true });
+    return;
+  }
+
   try {
     showNotification('Placing order...', 'info');
 
@@ -490,7 +504,7 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
   } catch (error) {
     console.error('Order creation failed:', error);
     if (window.API_CONFIG?.USE_OFFLINE_FALLBACK) {
-      const fallbackOrder = createOfflineOrder(orderData, { subtotal, shipping, tax, total });
+      const fallbackOrder = createOfflineOrder(orderData, orderTotals);
       handleOrderSuccess(fallbackOrder, total, { offline: true });
       return;
     }
