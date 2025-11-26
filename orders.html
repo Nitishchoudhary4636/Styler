@@ -108,7 +108,8 @@
 
     function checkForOrderSuccess() {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('success') === 'true') {
+      const successStatus = urlParams.get('success');
+      if (successStatus === 'true' || successStatus === 'offline') {
         showOrderSuccess(urlParams.get('orderId'), urlParams.get('total'));
       }
     }
