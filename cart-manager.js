@@ -700,16 +700,23 @@ function createOrderHTML(order, isExpanded = false) {
         <div class="order-items">
           <h4>Items (${Array.isArray(order.items) ? order.items.length : 0})</h4>
           <div class="items-list">
-            ${Array.isArray(order.items) ? order.items.map(item => `
-              <div class="order-item">
-                <img src="${item.image || '/Bags/placeholder.jpg'}" alt="${item.name}" class="item-image">
-                <div class="item-info">
-                  <h5>${item.name || 'Unknown Item'}</h5>
-                  <p>Color: ${item.color || 'N/A'} | Size: ${item.size || 'N/A'}</p>
-                  <p>Qty: ${item.quantity || 0} × ${formatCurrency(item.price)} = ${formatCurrency((item.quantity || 0) * (item.price || 0))}</p>
-                </div>
-              </div>
-            `).join('') : `
+            ${Array.isArray(order.items) ? order.items.map(item => {
+                const itemName = item.name || item.productName || 'Unknown Item';
+                const itemImage = item.image || item.imageUrl || '/Bags/placeholder.jpg';
+                const itemColor = item.color || item.variant || 'N/A';
+                const itemSize = item.size || item.dimension || 'N/A';
+                const linePrice = (item.price || 0) * (item.quantity || 0);
+                return `
+                  <div class="order-item">
+                    <img src="${itemImage}" alt="${escapeHtml(itemName)}" class="item-image">
+                    <div class="item-info">
+                      <h5>${escapeHtml(itemName)}</h5>
+                      <p>Color: ${escapeHtml(itemColor)} | Size: ${escapeHtml(itemSize)}</p>
+                      <p>Qty: ${item.quantity || 0} × ${formatCurrency(item.price || 0)} = ${formatCurrency(linePrice)}</p>
+                    </div>
+                  </div>
+                `;
+            }).join('') : `
               <p class="no-items-info">Item details are not available for this order.</p>
             `}
           </div>
