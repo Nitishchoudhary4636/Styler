@@ -531,6 +531,10 @@ function handleOrderSuccess(order, total, options = {}) {
     offlineMode ? 'warning' : 'success'
   );
 
+  sessionStorage.setItem('latestOrderId', order.id);
+  sessionStorage.setItem('latestOrderTotal', order.totalAmount || total);
+  sessionStorage.setItem('latestOrderSuccess', offlineMode ? 'offline' : 'true');
+
   setTimeout(() => {
     window.location.href = `orders.html?success=${offlineMode ? 'offline' : 'true'}&orderId=${order.id}&total=${order.totalAmount || total}`;
   }, 1500);

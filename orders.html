@@ -108,9 +108,21 @@
 
     function checkForOrderSuccess() {
       const urlParams = new URLSearchParams(window.location.search);
-      const successStatus = urlParams.get('success');
+      let successStatus = urlParams.get('success');
+      let orderId = urlParams.get('orderId');
+      let total = urlParams.get('total');
+
+      if (!orderId) {
+        successStatus = sessionStorage.getItem('latestOrderSuccess');
+        orderId = sessionStorage.getItem('latestOrderId');
+        total = sessionStorage.getItem('latestOrderTotal');
+      }
+
       if (successStatus === 'true' || successStatus === 'offline') {
-        showOrderSuccess(urlParams.get('orderId'), urlParams.get('total'));
+        showOrderSuccess(orderId, total);
+        sessionStorage.removeItem('latestOrderId');
+        sessionStorage.removeItem('latestOrderTotal');
+        sessionStorage.removeItem('latestOrderSuccess');
       }
     }
   </script>
