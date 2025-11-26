@@ -648,6 +648,23 @@ function renderOrders() {
     .join('');
 }
 
+function extractVariantParts(variant) {
+  if (!variant) return { color: null, size: null };
+  const parts = variant
+    .split(/[-–|]/)
+    .map(part => part.trim())
+    .filter(Boolean);
+  return {
+    color: parts[0] || null,
+    size: parts[1] || null
+  };
+}
+
+function getCatalogProductById(id) {
+  if (!window.products) return null;
+  return window.products.find(p => Number(p.id) === Number(id));
+}
+
 function createOrderHTML(order, isExpanded = false) {
   const orderDate = new Date(order.createdAt).toLocaleDateString();
   const estimatedDelivery = new Date(order.estimatedDelivery).toLocaleDateString();
@@ -701,10 +718,14 @@ function createOrderHTML(order, isExpanded = false) {
           <h4>Items (${Array.isArray(order.items) ? order.items.length : 0})</h4>
           <div class="items-list">
             ${Array.isArray(order.items) ? order.items.map(item => {
-                const itemName = item.name || item.productName || 'Unknown Item';
-                const itemImage = item.image || item.imageUrl || '/Bags/placeholder.jpg';
-                const itemColor = item.color || item.variant || 'N/A';
-                const itemSize = item.size || item.dimension || 'N/A';
+                const itemName = item.name || item.productName || getCatalogProductById(item.productId)?.name || 'Unknown Item';
+                const itemImage = item.image || item.imageUrl || getCatalogProductById(item.productId)?.image || '/Bags/placeholder.jpg';
+                const variantParts = extractVariantParts(item.variant || item.variantLabel || `${item.color || ''} - ${item.size || ''}`);
+                const catalogProduct = getCatalogProductById(item.productId);
+                const defaultColor = catalogProduct?.colors?.[0] || catalogProduct?.color || null;
+                const defaultSize = catalogProduct?.sizes?.[0] || catalogProduct?.size || null;
+                const itemColor = item.color || variantParts.color || defaultColor || 'N/A';
+                const itemSize = item.size || variantParts.size || defaultSize || 'N/A';
                 const linePrice = (item.price || 0) * (item.quantity || 0);
                 return `
                   <div class="order-item">
