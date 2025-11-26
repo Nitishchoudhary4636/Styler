@@ -484,33 +484,93 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
   
   try {
     showNotification('Placing order...', 'info');
-    
-    // Save order to backend
+
     const savedOrder = await ApiService.createOrder(orderData);
-    
-    // Clear cart
-    localStorage.removeItem('cart');
-    updateCartCount();
-    
-    if (window.pushMCPPurchase) {
-      pushMCPPurchase(savedOrder);
-    }
-    
-    const thankYouModal = document.getElementById('thankYouModal');
-    if (thankYouModal) {
-      thankYouModal.remove();
-    }
-    
-    showNotification('Order placed successfully!', 'success');
-    
-    setTimeout(() => {
-      window.location.href = `orders.html?success=true&orderId=${savedOrder.id}&total=${savedOrder.totalAmount}`;
-    }, 1500);
-    
+    handleOrderSuccess(savedOrder, total);
   } catch (error) {
     console.error('Order creation failed:', error);
+    if (window.API_CONFIG?.USE_OFFLINE_FALLBACK) {
+      const fallbackOrder = createOfflineOrder(orderData, { subtotal, shipping, tax, total });
+      handleOrderSuccess(fallbackOrder, total, { offline: true });
+      return;
+    }
     showNotification('Failed to place order: ' + error.message, 'error');
   }
+}
+
+function handleOrderSuccess(order, total, options = {}) {
+  const offlineMode = options.offline === true;
+  localStorage.removeItem('cart');
+  updateCartCount();
+
+  if (window.pushMCPPurchase) {
+    pushMCPPurchase(order);
+  }
+
+  const thankYouModal = document.getElementById('thankYouModal');
+  if (thankYouModal) {
+    thankYouModal.remove();
+  }
+
+  showNotification(
+    offlineMode ? 'Order saved locally and will appear in your orders list.' : 'Order placed successfully!',
+    offlineMode ? 'warning' : 'success'
+  );
+
+  setTimeout(() => {
+    window.location.href = `orders.html?success=${offlineMode ? 'offline' : 'true'}&orderId=${order.id}&total=${order.totalAmount || total}`;
+  }, 1500);
+}
+
+function createOfflineOrder(orderData, totals) {
+  const { subtotal, shipping, tax, total } = totals;
+  const now = new Date();
+  const offlineId = `offline-${now.getTime()}`;
+  const estimatedDelivery = new Date(now);
+  estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
+
+  const items = orderData.items.map(item => ({
+    ...item,
+    name: item.productName || item.name,
+    image: item.imageUrl || item.image || '/Bags/placeholder.jpg',
+    imageUrl: item.imageUrl || item.image,
+    price: item.price,
+    quantity: item.quantity
+  }));
+
+  const shippingAddress = {
+    ...orderData.shippingAddress,
+    addressLine1: orderData.shippingAddress.addressLine1 || orderData.shippingAddress.address,
+    addressLine2: orderData.shippingAddress.addressLine2 || orderData.shippingAddress.address2 || '',
+    city: orderData.shippingAddress.city || '',
+    state: orderData.shippingAddress.state || '',
+    postalCode: orderData.shippingAddress.postalCode || orderData.shippingAddress.pincode,
+    pincode: orderData.shippingAddress.pincode || orderData.shippingAddress.postalCode,
+    country: orderData.shippingAddress.country || 'India'
+  };
+
+  const offlineOrder = {
+    ...orderData,
+    id: offlineId,
+    createdAt: now.toISOString(),
+    estimatedDelivery: estimatedDelivery.toISOString(),
+    totalAmount: total,
+    subtotal,
+    shipping,
+    tax,
+    status: 'PENDING',
+    paymentMethod: orderData.paymentMethod,
+    items,
+    shippingAddress
+  };
+
+  const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+  storedOrders.push(offlineOrder);
+  localStorage.setItem('orders', JSON.stringify(storedOrders));
+  allOrders = storedOrders;
+  filteredOrders = storedOrders;
+
+  return offlineOrder;
 }
 
 function getEstimatedDelivery() {
