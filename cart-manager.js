@@ -627,18 +627,20 @@ function createOrderHTML(order) {
         </div>
         
         <div class="order-items">
-          <h4>Items (${order.items.length})</h4>
+          <h4>Items (${Array.isArray(order.items) ? order.items.length : 0})</h4>
           <div class="items-list">
-            ${order.items.map(item => `
+            ${Array.isArray(order.items) ? order.items.map(item => `
               <div class="order-item">
-                <img src="${item.image}" alt="${item.name}" class="item-image">
+                <img src="${item.image || '/Bags/placeholder.jpg'}" alt="${item.name}" class="item-image">
                 <div class="item-info">
-                  <h5>${item.name}</h5>
-                  <p>Color: ${item.color} | Size: ${item.size}</p>
-                  <p>Qty: ${item.quantity} × ${formatCurrency(item.price)} = ${formatCurrency(item.quantity * item.price)}</p>
+                  <h5>${item.name || 'Unknown Item'}</h5>
+                  <p>Color: ${item.color || 'N/A'} | Size: ${item.size || 'N/A'}</p>
+                  <p>Qty: ${item.quantity || 0} × ${formatCurrency(item.price)} = ${formatCurrency((item.quantity || 0) * (item.price || 0))}</p>
                 </div>
               </div>
-            `).join('')}
+            `).join('') : `
+              <p class="no-items-info">Item details are not available for this order.</p>
+            `}
           </div>
         </div>
         
