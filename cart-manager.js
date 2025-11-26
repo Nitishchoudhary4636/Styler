@@ -573,13 +573,13 @@ function renderOrders() {
   if (noOrdersDiv) noOrdersDiv.style.display = 'none';
   
   ordersContainer.innerHTML = filteredOrders
-    .sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
-    .map(order => createOrderHTML(order))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map((order, index) => createOrderHTML(order, index === 0)) // Pass true for the first (latest) order
     .join('');
 }
 
-function createOrderHTML(order) {
-  const orderDate = new Date(order.orderDate).toLocaleDateString();
+function createOrderHTML(order, isExpanded = false) {
+  const orderDate = new Date(order.createdAt).toLocaleDateString();
   const estimatedDelivery = new Date(order.estimatedDelivery).toLocaleDateString();
   const shippingAddress = order.shippingAddress || {}; // Safely handle missing address
   const progressPercentage = getOrderProgress(order.status || 'PENDING');
@@ -588,9 +588,9 @@ function createOrderHTML(order) {
     <div class="order-card">
       <div class="order-header">
         <div class="order-basic-info">
-          <h3>Order ${order.id}</h3>
+          <h3>Order #${order.id}</h3>
           <div class="order-meta">
-            <span class="order-date"><i class="fas fa-calendar"></i> ${new Date(order.createdAt).toLocaleDateString()}</span>
+            <span class="order-date"><i class="fas fa-calendar"></i> ${orderDate}</span>
             <span class="order-status status-${order.status.toLowerCase()}">${order.status}</span>
           </div>
         </div>
@@ -602,7 +602,7 @@ function createOrderHTML(order) {
         </div>
       </div>
       
-      <div class="order-details">
+      <div class="order-details" style="display: ${isExpanded ? 'grid' : 'none'};">
         <div class="order-summary">
           <div class="summary-item">
             <span>Total Amount:</span>
@@ -613,7 +613,7 @@ function createOrderHTML(order) {
           </div>
           <div class="summary-item">
             <span>Estimated Delivery:</span>
-            <strong>${new Date(order.estimatedDelivery).toLocaleDateString()}</strong>
+            <strong>${estimatedDelivery}</strong>
           </div>
         </div>
         
@@ -658,6 +658,16 @@ function createOrderHTML(order) {
       </div>
     </div>
   `;
+}
+
+function toggleOrderDetails(event) {
+  const header = event.currentTarget;
+  const details = header.nextElementSibling;
+  
+  if (details && details.classList.contains('order-details')) {
+    const isVisible = details.style.display === 'grid';
+    details.style.display = isVisible ? 'none' : 'grid';
+  }
 }
 
 function getOrderProgress(status) {
@@ -890,3 +900,4 @@ window.downloadInvoice = downloadInvoice;
 window.searchOrders = searchOrders;
 window.filterOrders = filterOrders;
 window.clearOrderFilters = clearOrderFilters;
+window.toggleOrderDetails = toggleOrderDetails;
