@@ -317,7 +317,6 @@ function setupShippingForm() {
     localStorage.setItem('userAddress', JSON.stringify(shippingAddress));
     currentShippingAddress = shippingAddress;
     
-    closeShippingModal();
     showPaymentModal(shippingAddress);
   });
 }
@@ -497,7 +496,9 @@ async function completeCheckout(shippingAddress, subtotal, shipping, tax, total)
     localStorage.removeItem('cart');
     updateCartCount();
     
-    pushMCPPurchase(savedOrder);
+    if (window.pushMCPPurchase) {
+      pushMCPPurchase(savedOrder);
+    }
     
     const thankYouModal = document.getElementById('thankYouModal');
     if (thankYouModal) {

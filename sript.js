@@ -157,6 +157,8 @@ function pushMCPPurchase(order) {
 
   console.log("💰 Purchase event pushed");
 }
+// Make it globally available
+window.pushMCPPurchase = pushMCPPurchase;
 
 const products = [
   {
