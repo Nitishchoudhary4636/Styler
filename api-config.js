@@ -96,6 +96,9 @@ class ApiService {
     // Create Order
     static async createOrder(orderData) {
         try {
+                console.groupCollapsed('🧾 createOrder payload');
+                console.log(orderData);
+                console.groupEnd();
             const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ORDERS}`, {
                 method: 'POST',
                 headers: API_CONFIG.HEADERS,
@@ -103,7 +106,15 @@ class ApiService {
             });
             
             if (!response.ok) {
-                throw new Error('Order creation failed');
+                    let errorBody = 'Unknown response';
+                    try {
+                        errorBody = await response.json();
+                    } catch (parseError) {
+                        errorBody = await response.text();
+                    }
+                    console.error('🛑 Order creation response:', response.status, errorBody);
+                    const message = errorBody?.message || errorBody || 'Order creation failed';
+                    throw new Error(message);
             }
             
             return await response.json();
