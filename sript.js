@@ -57,6 +57,8 @@ function pushMCPCartView() {
 
   window.dataLayer.push({
     event: 'view_cart',
+    pageType: 'Cart',
+      pageName: `Cart - ${cart.name}`,
     ecommerce: {
       cart: {
         products: cart.map(item => ({
