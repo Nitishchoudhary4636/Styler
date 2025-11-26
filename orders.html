@@ -114,8 +114,8 @@
   <script src="/footer.js"></script>
   <script src="/cart-manager.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      loadOrdersPage();
+    document.addEventListener('DOMContentLoaded', async function() {
+      await loadOrdersPage();
       checkForOrderSuccess();
     });
 
