@@ -186,7 +186,10 @@ function updateHeaderUserStatus() {
 function logout() {
   localStorage.removeItem('currentUser');
   localStorage.removeItem('userEmail');
-  // localStorage.removeItem('cart'); // Keep cart contents after logout
+  localStorage.removeItem('cart');
+  if (typeof updateCartCount === 'function') {
+    updateCartCount();
+  }
   showNotification('Logged out successfully', 'success');
   
   setTimeout(() => {
