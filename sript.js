@@ -141,16 +141,6 @@ function pushMCPPurchase(order) {
 // Make it globally available
 window.pushMCPPurchase = pushMCPPurchase;
 
-function sendInteractionEvent(eventName, details = {}) {
-  if (!eventName) return;
-  const payload = { event: eventName, ...details };
-  if (window.dataLayer && Array.isArray(window.dataLayer)) {
-    window.dataLayer.push(payload);
-  } else {
-    console.info('Interaction event fallback:', payload);
-  }
-}
-
 const products = [
   {
     id: 1,
@@ -1139,6 +1129,81 @@ function showMoreShoes() {
   }
 }
 
+function showMoreProducts() {
+  const mainContainer = document.getElementById('featuredProducts');
+  const viewMoreBtn = document.getElementById('viewMoreBtn');
+  if (!mainContainer) return;
+
+  const productsToShow = window.globalSearchResults || products;
+  const isSearchResults = !!window.globalSearchResults;
+
+  const nextBatch = productsToShow.slice(loadedProductsCount, loadedProductsCount + 3);
+  const remainingAfterBatch = productsToShow.slice(loadedProductsCount + 3);
+
+  if (nextBatch.length > 0) {
+    const nextProductsHTML = nextBatch.map(product => productCardHtml(product)).join('');
+    mainContainer.innerHTML += nextProductsHTML;
+    
+    loadedProductsCount += nextBatch.length;
+    
+
+    if (remainingAfterBatch.length > 0) {
+      const buttonText = isSearchResults ? 'View More Results' : 'View More Products';
+      viewMoreBtn.innerHTML = `<i class="fas fa-plus"></i> ${buttonText} (${remainingAfterBatch.length} remaining)`;
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+}
+
+function showMoreBags() {
+  const mainContainer = document.getElementById('bagsGrid');
+  const viewMoreBtn = document.getElementById('viewMoreBagsBtn');
+  
+  if (!mainContainer || !window.filteredBags) return;
+  
+  const nextBatch = window.filteredBags.slice(loadedBagsCount, loadedBagsCount + 3);
+  const remainingAfterBatch = window.filteredBags.slice(loadedBagsCount + 3);
+  
+  if (nextBatch.length > 0) {
+    const nextBagsHTML = nextBatch.map(product => productCardHtml(product)).join('');
+    mainContainer.innerHTML += nextBagsHTML;
+    
+    loadedBagsCount += nextBatch.length;
+    
+
+    if (remainingAfterBatch.length > 0) {
+      viewMoreBtn.innerHTML = `<i class="fas fa-plus"></i> View More Bags (${remainingAfterBatch.length} remaining)`;
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+}
+
+function showMoreShoes() {
+  const mainContainer = document.getElementById('shoesGrid');
+  const viewMoreBtn = document.getElementById('viewMoreShoesBtn');
+  
+  if (!mainContainer || !window.filteredShoes) return;
+  
+  const nextBatch = window.filteredShoes.slice(loadedShoesCount, loadedShoesCount + 3);
+  const remainingAfterBatch = window.filteredShoes.slice(loadedShoesCount + 3);
+  
+  if (nextBatch.length > 0) {
+    const nextShoesHTML = nextBatch.map(product => productCardHtml(product)).join('');
+    mainContainer.innerHTML += nextShoesHTML;
+    
+    loadedShoesCount += nextBatch.length;
+    
+
+    if (remainingAfterBatch.length > 0) {
+      viewMoreBtn.innerHTML = `<i class="fas fa-plus"></i> View More Shoes (${remainingAfterBatch.length} remaining)`;
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+}
+
 window.quickAddToCart = quickAddToCart;
 window.addToCart = addToCart;
 window.buyNow = buyNow;
@@ -1158,11 +1223,7 @@ window.escapeHtml = escapeHtml;
 window.truncate = truncate;
 window.currentUser = currentUser;
 window.isLoggedIn = isLoggedIn;
-window.mergeCartItems = mergeCartItems;
-window.syncCartAfterLogin = syncCartAfterLogin;
 window.productCardHtml = productCardHtml;
-window.isValidEmail = isValidEmail;
-window.sendInteractionEvent = sendInteractionEvent;
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -1198,6 +1259,7 @@ function loadRelatedProducts() {
     p.category === currentProduct.category && p.id !== currentProductId
   );
 
+  // Shuffle the related products for variety
   for (let i = related.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [related[i], related[j]] = [related[j], related[i]];
@@ -1206,3 +1268,5 @@ function loadRelatedProducts() {
   container.innerHTML = related.slice(0, 3).map(product => productCardHtml(product)).join('');
 }
 
+window.isValidEmail = isValidEmail;
+window.sendInteractionEvent = sendInteractionEvent;
