@@ -204,6 +204,7 @@
 
           localStorage.setItem('currentUser', JSON.stringify(user));
           localStorage.setItem('userEmail', email);
+          await syncCartAfterLogin(user.id);
 
           showAuthMessage('Login successful! Redirecting...', 'success');
           setTimeout(() => {

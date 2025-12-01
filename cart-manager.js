@@ -6,9 +6,13 @@ function getCart() {
   return JSON.parse(localStorage.getItem('cart') || '[]');
 }
 
-function saveCart(cart) {
+function saveCart(cart, options = {}) {
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
+
+  if (!options.skipBackendSync) {
+    syncCartToBackend(cart);
+  }
 }
 
 function addToCartWithVariant(productId, color = null, size = null, quantity = 1) {
@@ -154,6 +158,17 @@ function updateCartCount() {
   const cartCountElements = document.querySelectorAll('#cartCount');
   cartCountElements.forEach(element => {
     element.textContent = totalItems;
+  });
+}
+
+function syncCartToBackend(cart) {
+  if (!isLoggedIn()) return;
+
+  const userId = getLoggedInUserId();
+  if (!userId) return;
+
+  ApiService.saveCart(userId, cart).catch(error => {
+    console.warn('Cart sync failed:', error);
   });
 }
 
@@ -1006,6 +1021,11 @@ function isLoggedIn() {
   return !!(currentUser && userEmail);
 }
 
+function getLoggedInUserId() {
+  const user = currentUser();
+  return user && user.id ? user.id : null;
+}
+
 function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
   notification.className = `notification ${type}`;
@@ -1041,6 +1061,29 @@ function getNotificationIcon(type) {
     info: 'info-circle'
   };
   return icons[type] || 'info-circle';
+}
+
+async function hydrateCartFromBackend() {
+  if (!isLoggedIn()) return;
+
+  const userId = getLoggedInUserId();
+  if (!userId) return;
+
+  const localCart = getCart();
+
+  try {
+    const serverCart = await ApiService.fetchCart(userId);
+    const mergedCart = mergeCartItems(serverCart || [], localCart || []);
+
+    if (mergedCart.length === 0 && localCart.length === 0 && serverCart.length === 0) {
+      return;
+    }
+
+    saveCart(mergedCart, { skipBackendSync: true });
+    await ApiService.saveCart(userId, mergedCart);
+  } catch (error) {
+    console.warn('Failed to hydrate cart from backend', error);
+  }
 }
 
 // Event listeners for modal

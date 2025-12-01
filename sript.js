@@ -422,6 +422,76 @@ function isLoggedIn() {
   return !!(userData && localStorage.getItem('userEmail'));
 }
 
+function normalizeCartItem(item) {
+  if (!item) return null;
+  const normalizedQuantity = parseInt(item.quantity, 10);
+  const quantity = Number.isNaN(normalizedQuantity) ? 0 : normalizedQuantity;
+  if (quantity <= 0) return null;
+
+  const normalizedPrice = parseFloat(item.price) || 0;
+
+  return {
+    id: item.id ?? item.productId ?? null,
+    productId: item.productId ?? item.id ?? null,
+    name: item.name || item.productName || '',
+    price: normalizedPrice,
+    quantity,
+    image: item.image || item.imageUrl || '',
+    color: item.color || '',
+    size: item.size || '',
+    category: item.category || ''
+  };
+}
+
+function mergeCartItems(serverCart = [], localCart = []) {
+  const map = new Map();
+
+  const addItem = rawItem => {
+    const normalized = normalizeCartItem(rawItem);
+    if (!normalized) return;
+
+    const key = `${normalized.productId || normalized.id || 'unknown'}|${normalized.color}|${normalized.size}`;
+    const existing = map.get(key);
+
+    if (existing) {
+      existing.quantity += normalized.quantity;
+    } else {
+      map.set(key, { ...normalized });
+    }
+  };
+
+  serverCart.forEach(addItem);
+  localCart.forEach(addItem);
+
+  return Array.from(map.values()).map(item => {
+    if (!item.id && item.productId) {
+      item.id = item.productId;
+    }
+    return item;
+  });
+}
+
+async function syncCartAfterLogin(userId) {
+  if (!userId) return;
+  const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+  try {
+    const serverCart = await ApiService.fetchCart(userId);
+    const mergedCart = mergeCartItems(serverCart || [], localCart || []);
+
+    localStorage.setItem('cart', JSON.stringify(mergedCart));
+    if (typeof updateCartCount === 'function') {
+      updateCartCount();
+    }
+
+    if (mergedCart.length > 0) {
+      await ApiService.saveCart(userId, mergedCart);
+    }
+  } catch (error) {
+    console.warn('Cart sync after login failed:', error);
+  }
+}
+
 function ensureLoggedInBefore(action) {
   if (!isLoggedIn()) {
     sessionStorage.setItem('returnUrl', window.location.href);
@@ -1078,6 +1148,8 @@ window.escapeHtml = escapeHtml;
 window.truncate = truncate;
 window.currentUser = currentUser;
 window.isLoggedIn = isLoggedIn;
+window.mergeCartItems = mergeCartItems;
+window.syncCartAfterLogin = syncCartAfterLogin;
 window.productCardHtml = productCardHtml;
 
 if (typeof module !== 'undefined' && module.exports) {

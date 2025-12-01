@@ -27,7 +27,8 @@ const API_CONFIG = {
         REGISTER: '/api/users/register',
         FORGOT_PASSWORD: '/api/users/forgot-password',
         RESET_PASSWORD: '/api/users/reset-password',
-        USER_ORDERS: '/api/orders/user'
+        USER_ORDERS: '/api/orders/user',
+        CART: '/api/cart'
     },
     HEADERS: {
         'Content-Type': 'application/json',
@@ -139,6 +140,61 @@ class ApiService {
             return await response.json();
         } catch (error) {
             console.error('Fetch orders error:', error);
+            throw error;
+        }
+    }
+
+    static async fetchCart(userId) {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${userId}`, {
+                method: 'GET',
+                headers: API_CONFIG.HEADERS
+            });
+
+            if (!response.ok) {
+                console.warn('Failed to fetch cart for user', userId, response.status);
+                return [];
+            }
+
+            const data = await response.json();
+            if (Array.isArray(data)) {
+                return data;
+            }
+
+            if (data && Array.isArray(data.items)) {
+                return data.items;
+            }
+
+            return [];
+        } catch (error) {
+            console.error('Cart fetch error:', error);
+            return [];
+        }
+    }
+
+    static async saveCart(userId, cartItems) {
+        try {
+            const payload = Array.isArray(cartItems) ? cartItems : [];
+            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CART}/${userId}`, {
+                method: 'POST',
+                headers: API_CONFIG.HEADERS,
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                let errorBody = 'Unknown response while saving cart';
+                try {
+                    errorBody = await response.json();
+                } catch (parseError) {
+                    errorBody = await response.text();
+                }
+                console.error('Cart save response failed:', response.status, errorBody);
+                throw new Error(errorBody?.message || 'Failed to save cart');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Cart save error:', error);
             throw error;
         }
     }

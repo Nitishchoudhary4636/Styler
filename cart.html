@@ -152,7 +152,10 @@
   <script src="footer.js"></script>
   <script src="cart-manager.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
+      if (typeof hydrateCartFromBackend === 'function') {
+        await hydrateCartFromBackend();
+      }
       loadCartPage();
       setupShippingForm();
       pushMCPCartView(); // Corrected call for cart page
