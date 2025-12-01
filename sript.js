@@ -1129,52 +1129,6 @@ function showMoreShoes() {
   }
 }
 
-window.quickAddToCart = quickAddToCart;
-window.addToCart = addToCart;
-window.buyNow = buyNow;
-window.loadFeaturedProducts = loadFeaturedProducts;
-window.loadBagsPage = loadBagsPage;
-window.loadShoesPage = loadShoesPage;
-window.loadProductDetail = loadProductDetail;
-window.applySearchFilter = applySearchFilter;
-window.displayGlobalSearchResults = displayGlobalSearchResults;
-window.clearGlobalSearch = clearGlobalSearch;
-window.showMoreProducts = showMoreProducts;
-window.showMoreBags = showMoreBags;
-window.showMoreShoes = showMoreShoes;
-window.products = products;
-window.formatCurrency = formatCurrency;
-window.escapeHtml = escapeHtml;
-window.truncate = truncate;
-window.currentUser = currentUser;
-window.isLoggedIn = isLoggedIn;
-window.mergeCartItems = mergeCartItems;
-window.syncCartAfterLogin = syncCartAfterLogin;
-window.productCardHtml = productCardHtml;
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    products,
-    formatCurrency,
-    escapeHtml,
-    truncate,
-    productCardHtml,
-    quickAddToCart,
-    addToCart,
-    loadFeaturedProducts,
-    loadBagsPage,
-    loadShoesPage,
-    loadProductDetail
-  };
-}
-
-function loadRelatedProducts() {
-  console.log("loadRelatedProducts() called — no related products defined.");
-}
-
-window.isValidEmail = isValidEmail;
-window.sendInteractionEvent = sendInteractionEvent;
-  
 function showMoreProducts() {
   const mainContainer = document.getElementById('featuredProducts');
   const viewMoreBtn = document.getElementById('viewMoreBtn');
