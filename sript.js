@@ -141,6 +141,16 @@ function pushMCPPurchase(order) {
 // Make it globally available
 window.pushMCPPurchase = pushMCPPurchase;
 
+function sendInteractionEvent(eventName, details = {}) {
+  if (!eventName) return;
+  const payload = { event: eventName, ...details };
+  if (Array.isArray(window.dataLayer)) {
+    window.dataLayer.push(payload);
+  } else {
+    console.info('Interaction event fallback:', payload);
+  }
+}
+
 const products = [
   {
     id: 1,
