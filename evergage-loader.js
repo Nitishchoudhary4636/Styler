@@ -20,7 +20,11 @@
     /internal\/dataset/i,
     /visual-editor/i,
     /Cannot read properties of null/i,
-    /Failed to load resource.*404/i
+    /Failed to load resource.*404/i,
+    /Suppressed Evergage API call/i,
+    /restResource\.ts/i,
+    /session\.ts/i,
+    /historyService\.ts/i
   ];
   
   function shouldSuppressError(message) {
@@ -78,14 +82,32 @@
   const head = document.head || document.getElementsByTagName('head')[0];
   head.appendChild(script);
   
+  // Suppress unhandled promise rejections from Evergage
+  window.addEventListener('unhandledrejection', function(event) {
+    const reason = event.reason;
+    const message = reason && (reason.message || reason.toString());
+    if (message && shouldSuppressError(message)) {
+      event.preventDefault(); // Prevent the error from appearing in console
+      return false;
+    }
+  });
+  
   // Also suppress network errors via fetch/XHR interception
   if (window.fetch) {
     const originalFetch = window.fetch;
     window.fetch = function() {
       const url = arguments[0];
       if (typeof url === 'string' && /internal\/(auth|dataset)/i.test(url)) {
-        // Suppress Evergage internal API calls
-        return Promise.reject(new Error('Suppressed Evergage API call'));
+        // Return a mock successful response instead of rejecting
+        // This prevents uncaught promise rejections
+        return Promise.resolve({
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+          json: () => Promise.resolve({}),
+          text: () => Promise.resolve('{}'),
+          headers: new Headers()
+        });
       }
       return originalFetch.apply(this, arguments);
     };
@@ -106,7 +128,17 @@
     const originalSend = XMLHttpRequest.prototype.send;
     XMLHttpRequest.prototype.send = function() {
       if (this._suppressEvergage) {
-        // Don't actually send the request
+        // Simulate a failed request without actually sending it
+        // Set readyState to DONE and status to 404
+        setTimeout(() => {
+          if (this.onerror) {
+            try {
+              this.onerror();
+            } catch(e) {
+              // Suppress errors from error handlers
+            }
+          }
+        }, 0);
         return;
       }
       return originalSend.apply(this, arguments);
