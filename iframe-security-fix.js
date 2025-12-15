@@ -22,24 +22,30 @@
           sandbox.includes('allow-scripts') && 
           sandbox.includes('allow-same-origin')) {
         
-        // Option 1: Remove allow-same-origin (more secure)
-        // This prevents the iframe from accessing same-origin content
-        const fixedSandbox = sandbox
-          .replace(/\s*allow-same-origin\s*/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        
-        iframe.setAttribute('sandbox', fixedSandbox);
-        
-        // Option 2: If the iframe is from an unknown source, hide it
         const src = iframe.getAttribute('src') || '';
-        if (src && !src.includes(window.location.hostname) && 
-            !src.includes('cdnjs.cloudflare.com') &&
-            !src.includes('fonts.googleapis.com')) {
+        const isTrustedSource = src.includes(window.location.hostname) || 
+                                src.includes('cdnjs.cloudflare.com') ||
+                                src.includes('fonts.googleapis.com') ||
+                                src.includes('googleapis.com') ||
+                                src.includes('gstatic.com') ||
+                                !src; // Empty src might be for same-origin content
+        
+        // Only fix iframes from untrusted sources
+        // Trusted sources might need allow-same-origin for legitimate reasons
+        if (!isTrustedSource) {
+          // Remove allow-same-origin from untrusted iframes (more secure)
+          const fixedSandbox = sandbox
+            .replace(/\s*allow-same-origin\s*/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          
+          iframe.setAttribute('sandbox', fixedSandbox);
+          
           // Hide suspicious iframes from unknown sources
           iframe.style.display = 'none';
           iframe.style.visibility = 'hidden';
         }
+        // For trusted sources, keep allow-same-origin to avoid breaking functionality
       }
     });
   }
